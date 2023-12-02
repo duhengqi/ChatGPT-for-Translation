@@ -28,7 +28,7 @@ ALLOWED_FILE_TYPES = [
 ]
 
 @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
-def translate(key, target_language, text, use_azure=False, api_base="", deployment_name="", options=None):
+def translate(target_language, text, use_azure=False, api_base="", deployment_name="", options=None):
     client = OpenAI(
       api_key="sk-R5VhE7pR88Dm0xZmMAl17NtvKJgRbuB2NDbXp8hKR2hxUeOv",
       base_url="https://api.openai-proxy.org/v1"
@@ -67,8 +67,6 @@ def remove_empty_paragraphs(text):
 
 
 def translate_text_file(text_filepath_or_url, options):
-    OPENAI_API_KEY = "sk-R5VhE7pR88Dm0xZmMAl17NtvKJgRbuB2NDbXp8hKR2hxUeOv"
-
     paragraphs = read_and_preprocess_data(text_filepath_or_url, options)
 
     # Create a list to hold your translated_paragraphs. We'll populate it as futures complete.
@@ -80,7 +78,6 @@ def translate_text_file(text_filepath_or_url, options):
         for idx, text in enumerate(paragraphs):
             future = executor.submit(
                 translate,
-                OPENAI_API_KEY,
                 options.target_language,
                 text,
                 options.use_azure,
@@ -119,12 +116,6 @@ def translate_text_file(text_filepath_or_url, options):
     with open(output_file_translated, "w", encoding="utf-8") as f:
         f.write(translated_text)
         print(f"Translated text saved to {f.name}.")
-
-
-
-def download_html(url):
-    response = requests.get(url)
-    return response.text
 
 
 from utils.parse_pdfs.parse_tei_xml import extract_paper_info
