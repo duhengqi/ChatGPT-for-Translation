@@ -7,7 +7,7 @@ from pathlib import Path
 import os
 import concurrent.futures
 from tqdm import tqdm
-import openai
+from openai import OpenAI
 import requests
 import trafilatura
 from tqdm import tqdm
@@ -26,48 +26,29 @@ ALLOWED_FILE_TYPES = [
     ".html",
     ".pdf",
 ]
-AZURE_API_VERSION = "2023-03-15-preview"
-
 
 @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
 def translate(key, target_language, text, use_azure=False, api_base="", deployment_name="", options=None):
-    # Set up OpenAI API version
-    if use_azure:
-        openai.api_type = "azure"
-        openai.api_version = AZURE_API_VERSION
-        openai.api_base = api_base
-
-    # Set up OpenAI API key
-    openai.api_key = key
-    if not text:
-        return ""
-    # lang
-
+    client = OpenAI(
+      api_key="sk-R5VhE7pR88Dm0xZmMAl17NtvKJgRbuB2NDbXp8hKR2hxUeOv",
+      base_url="https://api.openai-proxy.org/v1"
+    )
     # Set up the prompt
     messages = [{
         'role': 'system',
-        'content': 'You are a translator assistant.'
+        'content': 'You are an expert in translation of the Linux kernel.'
     }, {
         "role":
         "user",
         "content":
         f"Translate the following text into {target_language}. Retain the original format. Return only the translation and nothing else:\n{text}",
     }]
-    if use_azure:
-        completion = openai.ChatCompletion.create(
-            # No need to specify model since deployment contain that information.
-            messages=messages,
-            deployment_id=deployment_name
-        )
-    else:
-        completion = openai.ChatCompletion.create(
-            model=options.model,
-            messages=messages,
-        )
+    completion = client.chat.completions.create(
+      model="gpt-3.5-turbo",
+      messages=messages
+    )
 
-    t_text = (completion["choices"][0].get("message").get(
-        "content").encode("utf8").decode())
-
+    t_text = completion.choices[0].message.content.encode("utf8").decode()
     return t_text
 
 
@@ -86,7 +67,7 @@ def remove_empty_paragraphs(text):
 
 
 def translate_text_file(text_filepath_or_url, options):
-    OPENAI_API_KEY = options.openai_key or os.environ.get("OPENAI_API_KEY")
+    OPENAI_API_KEY = "sk-R5VhE7pR88Dm0xZmMAl17NtvKJgRbuB2NDbXp8hKR2hxUeOv"
 
     paragraphs = read_and_preprocess_data(text_filepath_or_url, options)
 
@@ -127,11 +108,7 @@ def translate_text_file(text_filepath_or_url, options):
                                    paragraphs, translated_paragraphs))
 
     bilingual_text = remove_empty_paragraphs(bilingual_text)
-    output_file_bilingual = f"{Path(text_filepath_or_url).parent}/{Path(text_filepath_or_url).stem}_bilingual.txt"
-    with open(output_file_bilingual, "w", encoding="utf-8") as f:
-        f.write(bilingual_text)
-        print(f"Bilingual text saved to {f.name}.")
-    create_bilingual_docx(output_file_bilingual)
+
 
     # Output translated text file
     # remove extra newlines
@@ -142,7 +119,7 @@ def translate_text_file(text_filepath_or_url, options):
     with open(output_file_translated, "w", encoding="utf-8") as f:
         f.write(translated_text)
         print(f"Translated text saved to {f.name}.")
-    create_bilingual_docx(output_file_translated)
+
 
 
 def download_html(url):
@@ -155,36 +132,18 @@ from pathlib import Path
 import trafilatura
 
 def read_and_preprocess_data(text_filepath_or_url, options):
-    if text_filepath_or_url.startswith('http'):
-        # replace "https:/www" with "https://www"
-        text_filepath_or_url = text_filepath_or_url.replace(":/", "://")
-        # download and extract text from URL
-        print("Downloading and extracting text from URL...")
-        downloaded = trafilatura.fetch_url(text_filepath_or_url)
-        print("Downloaded text:")
-        print(downloaded)
-        text = trafilatura.extract(downloaded)
-    elif text_filepath_or_url.endswith('.pdf'):
-        # extract text from PDF file
-        print("Extracting text from PDF file...")
-        extract_paper_info(text_filepath_or_url)
-        # use newly created txt file
-        text_filepath_or_url = f"{Path(text_filepath_or_url).parent}/{Path(text_filepath_or_url).stem}_extracted.txt"
-        with open(text_filepath_or_url, "r", encoding='utf-8') as f:
-            text = f.read()
-    else:
-        with open(text_filepath_or_url, "r", encoding='utf-8') as f:
-            text = f.read()
-            if text_filepath_or_url.endswith('.html'):
-                # extract text from HTML file
-                print("Extracting text from HTML file...")
-                text = trafilatura.extract(text)
-                # write to a txt file ended with "_extracted"
-                with open(
-                        f"{Path(text_filepath_or_url).parent}/{Path(text_filepath_or_url).stem}_extracted.txt",
-                        "w") as f:
-                    f.write(text)
-                    print(f"Extracted text saved to {f.name}.")
+    with open(text_filepath_or_url, "r", encoding='utf-8') as f:
+        text = f.read()
+        if text_filepath_or_url.endswith('.html'):
+            # extract text from HTML file
+            print("Extracting text from HTML file...")
+            text = trafilatura.extract(text)
+            # write to a txt file ended with "_extracted"
+            with open(
+                    f"{Path(text_filepath_or_url).parent}/{Path(text_filepath_or_url).stem}_extracted.txt",
+                    "w") as f:
+                f.write(text)
+                print(f"Extracted text saved to {f.name}.")
     paragraphs = [p.strip() for p in text.split("\n") if p.strip() != ""]
 
     return paragraphs
@@ -208,63 +167,18 @@ def parse_arguments():
          "help": "target language to translate to"}),
         ("--only_process_this_file_extension",
          {"type": str, "default": "", "help": "only process files with this extension"}),
-        ("--use_azure", {"action": "store_true", "default": False,
-         "help": "Use Azure OpenAI service instead of OpenAI platform."}),
-        ("--azure_endpoint",
-         {"type": str, "default": "", "help": "Endpoint URL of Azure OpenAI service. Only require when use AOAI."}),
-        ("--azure_deployment_name",
-         {"type": str, "default": "", "help": "Deployment of Azure OpenAI service. Only require when use AOAI."}),
     ]
 
     for argument, kwargs in arguments:
         parser.add_argument(argument, **kwargs)
 
     options = parser.parse_args()
-    OPENAI_API_KEY = options.openai_key or os.environ.get("OPENAI_API_KEY")
-    if not OPENAI_API_KEY:
-        raise Exception("Please provide your OpenAI API key")
-    if options.use_azure:
-        assert options.azure_endpoint is not None and options.azure_endpoint != '', "--azure_endpoint is required when use Azure"
-        assert options.azure_deployment_name is not None and options.azure_deployment_name, "--azure_deployment_name is required when use Azure"
+    OPENAI_API_KEY = "sk-R5VhE7pR88Dm0xZmMAl17NtvKJgRbuB2NDbXp8hKR2hxUeOv"
+
     return options
-
-
-def check_file_path(file_path: Path):
-    """
-    Ensure file extension is in ALLOWED_FILE_TYPES or is a URL.
-    If file ends with _translated.txt or _bilingual.txt, skip it.
-    If there is any txt file ending with _translated.txt or _bilingual.txt, skip it.
-    """
-    if not file_path.suffix.lower() in ALLOWED_FILE_TYPES and not str(
-            file_path).startswith('http'):
-        print(f"File extension {file_path.suffix} is not allowed.")
-        raise Exception("Please use a txt file or URL")
-
-    if file_path.stem.endswith("_translated") or file_path.stem.endswith(
-            "extracted_translated"):
-        print(
-            f"You already have a translated file for {file_path}, skipping...")
-        return False
-    elif file_path.stem.endswith("_bilingual") or file_path.stem.endswith(
-            "extracted_bilingual"):
-        print(
-            f"You already have a bilingual file for {file_path}, skipping...")
-        return False
-
-    if (file_path.with_name(f"{file_path.stem}_translated.txt").exists() or
-            file_path.with_name(f"{file_path.stem}_extracted_translated.txt").exists()):
-        print(
-            f"You already have a translated file for {file_path}, skipping...")
-        return False
-
-    return True
-
-
 
 def process_file(file_path, options):
     """Translate a single text file"""
-    if not check_file_path(file_path):
-        return
     print(f"Translating {file_path}...")
     translate_text_file(str(file_path), options)
 
