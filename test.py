@@ -19,14 +19,6 @@ from tenacity import (
 )  # for exponential backoff
 from concurrent.futures import as_completed
 
-ALLOWED_FILE_TYPES = [
-    ".txt",
-    ".md",
-    ".rtf",
-    ".html",
-    ".pdf",
-]
-
 @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
 def translate(target_language, text, use_azure=False, api_base="", deployment_name="", options=None):
     client = OpenAI(
@@ -67,7 +59,7 @@ def remove_empty_paragraphs(text):
 
 
 def translate_text_file(text_filepath_or_url, options):
-    paragraphs = read_and_preprocess_data(text_filepath_or_url, options)
+    paragraphs = read_and_preprocess_data(text_filepath_or_url)
 
     # Create a list to hold your translated_paragraphs. We'll populate it as futures complete.
     translated_paragraphs = [None for _ in paragraphs]
@@ -122,19 +114,13 @@ from utils.parse_pdfs.parse_tei_xml import extract_paper_info
 from pathlib import Path
 import trafilatura
 
-def read_and_preprocess_data(text_filepath_or_url, options):
+def read_and_preprocess_data(text_filepath_or_url):
     with open(text_filepath_or_url, "r", encoding='utf-8') as f:
         text = f.read()
-        if text_filepath_or_url.endswith('.html'):
-            # extract text from HTML file
-            print("Extracting text from HTML file...")
-            text = trafilatura.extract(text)
-            # write to a txt file ended with "_extracted"
-            with open(
-                    f"{Path(text_filepath_or_url).parent}/{Path(text_filepath_or_url).stem}_extracted.txt",
-                    "w") as f:
-                f.write(text)
-                print(f"Extracted text saved to {f.name}.")
+        # extract text from HTML file
+        print("Extracting text from HTML file...")
+        text = trafilatura.extract(text)
+
     paragraphs = [p.strip() for p in text.split("\n") if p.strip() != ""]
 
     return paragraphs
@@ -188,12 +174,8 @@ def process_folder(folder_path, options):
         files_to_process = list(folder_path.rglob("*"))
     total_files = len(files_to_process)
     for index, file_path in enumerate(files_to_process):
-        if file_path.is_file() and file_path.suffix.lower(
-        ) in ALLOWED_FILE_TYPES:
             process_file(file_path, options)
-        print(
-            f"Processed file {index + 1} of {total_files}. Only {total_files - index - 1} files left to process."
-        )
+
 
 
 def main():
