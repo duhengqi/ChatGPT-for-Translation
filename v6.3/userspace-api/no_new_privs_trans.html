@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.17: http://docutils.sourceforge.net/" name="generator"/>
+<title>No New Privileges Flag — The Linux Kernel  documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/alabaster.css" rel="stylesheet" type="text/css"/>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="seccomp_filter.html" rel="next" title="Seccomp BPF (SECure COMPuting with filters)"/>
+<link href="index.html" rel="prev" title="The Linux kernel user-space API guide"/>
+<link href="../_static/custom.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=0.9, maximum-scale=0.9" name="viewport"/>
+</head><body>
+<div class="document">
+<div aria-label="main navigation" class="sphinxsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">The Linux Kernel</a></h1>
+<p class="blurb">6.3.0</p>
+<div id="searchbox" role="search" style="display: none">
+<h3 id="searchlabel">Quick search</h3>
+<div class="searchformwrapper">
+<form action="../search.html" class="search" method="get">
+<input aria-labelledby="searchlabel" autocapitalize="off" autocomplete="off" autocorrect="off" name="q" spellcheck="false" type="text"/>
+<input type="submit" value="Go"/>
+</form>
+</div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script><!-- SPDX-License-Identifier: GPL-2.0 -->
+<p>
+<h3 class="kernel-toc-contents">Contents</h3>
+<input checked="" class="kernel-toc-toggle" id="kernel-toc-toggle" type="checkbox"/>
+<label class="kernel-toc-title" for="kernel-toc-toggle"></label>
+<div class="kerneltoc" id="kerneltoc">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../process/development-process.html">A guide to the Kernel Development Process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../process/submitting-patches.html">Submitting patches: the essential guide to getting your code into the kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../process/code-of-conduct.html">Code of conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintainer/index.html">Kernel Maintainer Handbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../process/index.html">All development-process docs</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../core-api/index.html">Core API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../driver-api/index.html">Driver implementer’s API guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subsystem-apis.html">Kernel subsystem documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../locking/index.html">Locking in the kernel</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../process/license-rules.html">Linux kernel licensing rules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../doc-guide/index.html">How to write kernel documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-tools/index.html">Development tools for the kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-tools/testing-overview.html">Kernel Testing Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kernel-hacking/index.html">Kernel Hacking Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trace/index.html">Linux Tracing Technologies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fault-injection/index.html">fault-injection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../livepatch/index.html">Kernel Livepatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rust/index.html">Rust</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/index.html">The Linux kernel user’s and administrator’s guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kbuild/index.html">The kernel build system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/reporting-issues.html">Reporting issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools/index.html">User-space tools</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">The Linux kernel user-space API guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">No New Privileges Flag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seccomp_filter.html">Seccomp BPF (SECure COMPuting with filters)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="landlock.html">Landlock: unprivileged access control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unshare.html">unshare system call</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec_ctrl.html">Speculation Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="accelerators/ocxl.html">OpenCAPI (Open Coherent Accelerator Processor Interface)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebpf/index.html">eBPF Userspace API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ioctl/index.html">IOCTLs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iommu.html">IOMMU Userspace API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iommufd.html">IOMMUFD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="media/index.html">Linux Media Infrastructure userspace API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netlink/index.html">Netlink Handbook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sysfs-platform_profile.html">Platform Profile Selection (e.g. /sys/firmware/acpi/platform_profile)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vduse.html">VDUSE - “vDPA Device in Userspace”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="futex2.html">futex2</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../firmware-guide/index.html">The Linux kernel firmware guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devicetree/index.html">Open Firmware and Devicetree</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../arch.html">CPU Architectures</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../staging/index.html">Unsorted Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../translations/index.html">Translations</a></li>
+</ul>
+</div>
+<script type="text/javascript"> <!--
+  var sbar = document.getElementsByClassName("sphinxsidebar")[0];
+  let currents = document.getElementsByClassName("current")
+  sbar.scrollTop = currents[currents.length - 1].offsetTop;
+  --> </script>
+<div aria-label="source link" role="note">
+<h3>This Page</h3>
+<ul class="this-page-menu">
+<li><a href="../_sources/userspace-api/no_new_privs.rst.txt" rel="nofollow">Show Source</a></li>
+</ul>
+</div>
+</p></div>
+</div>
+<div class="documentwrapper">
+<div class="bodywrapper">
+<div class="body" role="main">
+<section id="no-new-privileges-flag">
+<h1>No New Privileges Flag<a class="headerlink" href="#no-new-privileges-flag" title="Permalink to this heading">¶</a></h1>
+中文：execve系统调用可以授予一个新启动的程序权限，而父进程则没有这些权限。最明显的例子是setuid/setgid程序和文件能力。为了防止父进程同样获得这些权限，内核和用户代码必须小心防止父进程执行任何可能破坏子进程的操作。例如：
+<p>The execve system call can grant a newly-started program privileges that
+its parent did not have.  The most obvious examples are setuid/setgid
+programs and file capabilities.  To prevent the parent program from
+gaining these privileges as well, the kernel and user code must be
+careful to prevent the parent from doing anything that could subvert the
+child.  For example:</p>
+<blockquote>
+<div><ul class="simple">
+<li>中文：如果程序设置了setuid，则动态加载器会以不同的方式处理LD_*环境变量。
+<p>The dynamic loader handles <code class="docutils literal notranslate"><span class="pre">LD_*</span></code> environment variables differently if
+a program is setuid.</p></li>
+<li>中文：chroot对于非特权进程是不允许的，因为它会允许从继承chroot的进程的角度来替换/etc/passwd。
+<p>chroot is disallowed to unprivileged processes, since it would allow
+<code class="docutils literal notranslate"><span class="pre">/etc/passwd</span></code> to be replaced from the point of view of a process that
+inherited chroot.</p></li>
+<li>中文：执行代码对ptrace进行了特殊处理。
+<p>The exec code has special handling for ptrace.</p></li>
+</ul>
+</div></blockquote>
+中文：这些都是临时修复措施。自Linux 3.5开始，no_new_privs位是一个新的、通用的机制，使得一个进程能够以一种跨execve持久保持的方式修改其执行环境而不会带来安全问题。任何任务都可以设置no_new_privs。一旦设置了该位，它会在fork、clone和execve之间继承，并且无法取消设置。设置了no_new_privs后，execve()承诺不会授予任何未经execve调用不能完成的特权操作。例如，setuid和setgid位将不再更改用户ID或组ID；文件权限机制不会增加允许的权限集合；LSM在execve后不会放宽约束条件。
+<p>These are all ad-hoc fixes.  The <code class="docutils literal notranslate"><span class="pre">no_new_privs</span></code> bit (since Linux 3.5) is a
+new, generic mechanism to make it safe for a process to modify its
+execution environment in a manner that persists across execve.  Any task
+can set <code class="docutils literal notranslate"><span class="pre">no_new_privs</span></code>.  Once the bit is set, it is inherited across fork,
+clone, and execve and cannot be unset.  With <code class="docutils literal notranslate"><span class="pre">no_new_privs</span></code> set, <code class="docutils literal notranslate"><span class="pre">execve()</span></code>
+promises not to grant the privilege to do anything that could not have
+been done without the execve call.  For example, the setuid and setgid
+bits will no longer change the uid or gid; file capabilities will not
+add to the permitted set, and LSMs will not relax constraints after
+execve.</p>
+<p>To set <code class="docutils literal notranslate"><span class="pre">no_new_privs</span></code>, use:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
+</pre></div>
+</div>
+中文：要小心，LSM也可能不会在 no_new_privs 模式下加强对exec的约束。（这意味着在执行守护程序之前设置一个通用的服务启动器来设置 no_new_privs 可能会干扰基于LSM的沙箱设置。）
+<p>Be careful, though: LSMs might also not tighten constraints on exec
+in <code class="docutils literal notranslate"><span class="pre">no_new_privs</span></code> mode.  (This means that setting up a general-purpose
+service launcher to set <code class="docutils literal notranslate"><span class="pre">no_new_privs</span></code> before execing daemons may
+interfere with LSM-based sandboxing.)</p>
+中文：请注意，no_new_privs无法阻止不涉及execve()的权限更改。具有适当特权的任务仍可以调用setuid(2)并接收SCM_RIGHTS数据报。
+<p>Note that <code class="docutils literal notranslate"><span class="pre">no_new_privs</span></code> does not prevent privilege changes that do not
+involve <code class="docutils literal notranslate"><span class="pre">execve()</span></code>.  An appropriately privileged task can still call
+<code class="docutils literal notranslate"><span class="pre">setuid(2)</span></code> and receive SCM_RIGHTS datagrams.</p>
+中文：到目前为止，no_new_privs 有两种主要用途：
+<p>There are two main use cases for <code class="docutils literal notranslate"><span class="pre">no_new_privs</span></code> so far:</p>
+<blockquote>
+<div><ul class="simple">
+<li>中文：seccomp模式2沙箱的安装过滤器会在execve操作后持续存在，并可以改变新执行程序的行为。因此，只有在设置了no_new_privs的情况下，非特权用户才被允许安装此类过滤器。
+<p>Filters installed for the seccomp mode 2 sandbox persist across
+execve and can change the behavior of newly-executed programs.
+Unprivileged users are therefore only allowed to install such filters
+if <code class="docutils literal notranslate"><span class="pre">no_new_privs</span></code> is set.</p></li>
+<li>中文：通过自身，no_new_privs 可以用于减少未经特权的用户可用的攻击面。如果使用给定 uid 运行的所有内容都设置了 no_new_privs，则该 uid 将无法通过直接攻击 setuid、setgid 和 fcap-using 二进制文件来提升其特权级别；它将需要首先破坏没有设置 no_new_privs 位的某个内容。
+<p>By itself, <code class="docutils literal notranslate"><span class="pre">no_new_privs</span></code> can be used to reduce the attack surface
+available to an unprivileged user.  If everything running with a
+given uid has <code class="docutils literal notranslate"><span class="pre">no_new_privs</span></code> set, then that uid will be unable to
+escalate its privileges by directly attacking setuid, setgid, and
+fcap-using binaries; it will need to compromise something without the
+<code class="docutils literal notranslate"><span class="pre">no_new_privs</span></code> bit set first.</p></li>
+</ul>
+</div></blockquote>
+中文：在将no_new_privs设置为启用的情况下，未授权任务可能可以访问其他潜在危险的内核功能。原则上，在设置了no_new_privs的情况下，对unshare(2)和clone(2)的几个选项是安全的，而no_new_privs + chroot相比仅使用chroot要更为安全。
+<p>In the future, other potentially dangerous kernel features could become
+available to unprivileged tasks if <code class="docutils literal notranslate"><span class="pre">no_new_privs</span></code> is set.  In principle,
+several options to <code class="docutils literal notranslate"><span class="pre">unshare(2)</span></code> and <code class="docutils literal notranslate"><span class="pre">clone(2)</span></code> would be safe when
+<code class="docutils literal notranslate"><span class="pre">no_new_privs</span></code> is set, and <code class="docutils literal notranslate"><span class="pre">no_new_privs</span></code> + <code class="docutils literal notranslate"><span class="pre">chroot</span></code> is considerable less
+dangerous than chroot by itself.</p>
+</section>
+</div>
+</div>
+</div>
+<div class="clearer"></div>
+</div>
+<div class="footer">
+      ©The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/userspace-api/no_new_privs.rst.txt" rel="nofollow">Page source</a>
+</div>
+</body>
+</html>
