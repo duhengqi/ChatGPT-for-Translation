@@ -119,7 +119,12 @@ def check_file_path(file_path: Path):
         print(f"File extension {file_path.suffix} is not allowed.")
         raise Exception("Please use a html file")
 
-    if file_path.with_name(f"{file_path.stem}_trans.html").exists():
+    if file_path.stem.endswith("_translated"):
+        print(
+            f"You already have a translated file for {file_path}, skipping...")
+        return False
+
+    if file_path.with_name(f"{file_path.stem}_translated.html").exists():
         print(
             f"You already have a translated file for {file_path}, skipping...")
         return False
@@ -180,7 +185,7 @@ def translate_html_file(input_path, options):
             i += 1
     # 获取修改后的HTML
     modified_html = str(soup)
-    trans_file_path = input_path.with_name(f"{input_path.stem}_trans.html")
+    trans_file_path = input_path.with_name(f"{input_path.stem}_translated.html")
     print(f"translate done, writing result in {trans_file_path}")
     with open(trans_file_path, "w", encoding='utf-8') as f:
         f.write(modified_html)
