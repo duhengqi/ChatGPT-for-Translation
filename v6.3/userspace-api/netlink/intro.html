@@ -2,61 +2,43 @@
 <!DOCTYPE html>
 
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
-    <title>Introduction to Netlink &#8212; The Linux Kernel  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Using Netlink protocol specifications" href="intro-specs.html" />
-    <link rel="prev" title="Netlink Handbook" href="index.html" />
-   
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  <div class="document">
-    
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.17: http://docutils.sourceforge.net/" name="generator"/>
+<title>Introduction to Netlink — The Linux Kernel  documentation</title>
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/alabaster.css" rel="stylesheet" type="text/css"/>
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script>
+<script src="../../_static/underscore.js"></script>
+<script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../../_static/doctools.js"></script>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="intro-specs.html" rel="next" title="Using Netlink protocol specifications"/>
+<link href="index.html" rel="prev" title="Netlink Handbook"/>
+<link href="../../_static/custom.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=0.9, maximum-scale=0.9" name="viewport"/>
+</head><body>
+<div class="document">
+<div aria-label="main navigation" class="sphinxsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../../index.html">The Linux Kernel</a></h1>
-
-
-
 <p class="blurb">6.3.0</p>
-
-
-
-
-
-
-
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
+<div id="searchbox" role="search" style="display: none">
+<h3 id="searchlabel">Quick search</h3>
+<div class="searchformwrapper">
+<form action="../../search.html" class="search" method="get">
+<input aria-labelledby="searchlabel" autocapitalize="off" autocomplete="off" autocorrect="off" name="q" spellcheck="false" type="text"/>
+<input type="submit" value="Go"/>
+</form>
+</div>
 </div>
 <script>document.getElementById('searchbox').style.display = "block"</script><!-- SPDX-License-Identifier: GPL-2.0 -->
-
 <p>
 <h3 class="kernel-toc-contents">Contents</h3>
-<input type="checkbox" class="kernel-toc-toggle" id = "kernel-toc-toggle" checked>
+<input checked="" class="kernel-toc-toggle" id="kernel-toc-toggle" type="checkbox"/>
 <label class="kernel-toc-title" for="kernel-toc-toggle"></label>
-
 <div class="kerneltoc" id="kerneltoc">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../process/development-process.html">A guide to the Kernel Development Process</a></li>
@@ -126,37 +108,35 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../translations/index.html">Translations</a></li>
 </ul>
-
 </div>
-
 <script type="text/javascript"> <!--
   var sbar = document.getElementsByClassName("sphinxsidebar")[0];
   let currents = document.getElementsByClassName("current")
   sbar.scrollTop = currents[currents.length - 1].offsetTop;
   --> </script>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../../_sources/userspace-api/netlink/intro.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-        </div>
-      </div>
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
-  <section id="introduction-to-netlink">
+<div aria-label="source link" role="note">
+<h3>This Page</h3>
+<ul class="this-page-menu">
+<li><a href="../../_sources/userspace-api/netlink/intro.rst.txt" rel="nofollow">Show Source</a></li>
+</ul>
+</div>
+</p></div>
+</div>
+<div class="documentwrapper">
+<div class="bodywrapper">
+<div class="body" role="main">
+<section id="introduction-to-netlink">
 <h1>Introduction to Netlink<a class="headerlink" href="#introduction-to-netlink" title="Permalink to this heading">¶</a></h1>
+中文：Netlink经常被描述为ioctl()的替代品。
+它的目标是用一种可以轻松添加或扩展参数的格式来取代作为ioctl()输入的固定格式C结构。
 <p>Netlink is often described as an ioctl() replacement.
 It aims to replace fixed-format C structures as supplied
 to ioctl() with a format which allows an easy way to add
 or extended the arguments.</p>
+中文：为了实现这一点，Netlink使用一个最小的固定格式的元数据标题，其后跟随多个以TLV（类型，长度，值）格式编码的属性。
 <p>To achieve this Netlink uses a minimal fixed-format metadata header
 followed by multiple attributes in the TLV (type, length, value) format.</p>
+中文：很不幸的是，这个协议经过多年的有机和未被记录的演变，难以进行一致性的解释。为了更有实际意义，本文档从描述当前的netlink用法开始，并在后面的部分深入讨论更多的“历史”用途。
 <p>Unfortunately the protocol has evolved over the years, in an organic
 and undocumented fashion, making it hard to coherently explain.
 To make the most practical sense this document starts by describing
@@ -164,15 +144,18 @@ netlink as it is used today and dives into more “historical” uses
 in later sections.</p>
 <section id="opening-a-socket">
 <h2>Opening a socket<a class="headerlink" href="#opening-a-socket" title="Permalink to this heading">¶</a></h2>
+中文：Netlink通信是通过套接字进行的，首先需要打开一个套接字：
 <p>Netlink communication happens over sockets, a socket needs to be
 opened first:</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">socket</span><span class="p">(</span><span class="n">AF_NETLINK</span><span class="p">,</span><span class="w"> </span><span class="n">SOCK_RAW</span><span class="p">,</span><span class="w"> </span><span class="n">NETLINK_GENERIC</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
+中文：使用套接字的方式能够自然地在双向（向内核和从内核）进行信息交流。当应用程序发送请求时，操作仍然是同步执行的，但需要使用单独的recv()系统调用来读取回复。
 <p>The use of sockets allows for a natural way of exchanging information
 in both directions (to and from the kernel). The operations are still
 performed synchronously when applications send() the request but
 a separate recv() system call is needed to read the reply.</p>
+中文：因此，Netlink“调用”的一个非常简化的流程大致如下：
 <p>A very simplified flow of a Netlink “call” will therefore look
 something like:</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">socket</span><span class="p">(</span><span class="n">AF_NETLINK</span><span class="p">,</span><span class="w"> </span><span class="n">SOCK_RAW</span><span class="p">,</span><span class="w"> </span><span class="n">NETLINK_GENERIC</span><span class="p">);</span><span class="w"></span>
@@ -183,6 +166,7 @@ something like:</p>
 <span class="cm">/* interpret the response */</span><span class="w"></span>
 </pre></div>
 </div>
+中文：Netlink还提供了对“转储”（即通信）的自然支持，即向用户空间通信指定类型的所有对象（例如，转储所有网络接口）。
 <p>Netlink also provides natural support for “dumping”, i.e. communicating
 to user space all objects of a certain type (e.g. dumping all network
 interfaces).</p>
@@ -202,6 +186,7 @@ interfaces).</p>
 <span class="nl">dump_finished</span><span class="p">:</span><span class="w"></span>
 </pre></div>
 </div>
+中文：socket()调用的前两个参数需要很少的解释 - 它是打开一个Netlink套接字，用户提供所有的头部信息（因此是NETLINK, RAW）。最后一个参数是Netlink中的协议。这个字段用于标识套接字将与之通信的子系统。
 <p>The first two arguments of the socket() call require little explanation -
 it is opening a Netlink socket, with all headers provided by the user
 (hence NETLINK, RAW). The last argument is the protocol within Netlink.
@@ -209,15 +194,19 @@ This field used to identify the subsystem with which the socket will
 communicate.</p>
 <section id="classic-vs-generic-netlink">
 <h3>Classic vs Generic Netlink<a class="headerlink" href="#classic-vs-generic-netlink" title="Permalink to this heading">¶</a></h3>
+中文：Netlink的初始实现依赖于对子系统进行静态分配的ID，并提供了很少的支持基础设施。让我们将这些协议统称为经典Netlink。这些协议的列表定义在include/uapi/linux/netlink.h文件的顶部，其中包括常见的网络（NETLINK_ROUTE）、iSCSI（NETLINK_ISCSI）和审计（NETLINK_AUDIT）。
 <p>Initial implementation of Netlink depended on a static allocation
 of IDs to subsystems and provided little supporting infrastructure.
 Let us refer to those protocols collectively as <strong>Classic Netlink</strong>.
 The list of them is defined on top of the <code class="docutils literal notranslate"><span class="pre">include/uapi/linux/netlink.h</span></code>
 file, they include among others - general networking (NETLINK_ROUTE),
 iSCSI (NETLINK_ISCSI), and audit (NETLINK_AUDIT).</p>
+中文：通用Netlink（引入于2005年）允许子系统的动态注册（和子系统ID分配），自省并简化了接口的内核实现。
 <p><strong>Generic Netlink</strong> (introduced in 2005) allows for dynamic registration of
 subsystems (and subsystem ID allocation), introspection and simplifies
 implementing the kernel side of the interface.</p>
+中文：以下部分描述了如何使用通用Netlink，因为使用通用Netlink的子系统数量比老的协议大了一个数量级。对于在内核中添加更多经典Netlink协议也没有计划。
+有关如何与Linux内核的核心网络部分进行通信（或者另外20个使用经典Netlink的子系统）的基本信息稍后在本文档中提供。
 <p>The following section describes how to use Generic Netlink, as the
 number of subsystems using Generic Netlink outnumbers the older
 protocols by an order of magnitude. There are also no plans for adding
@@ -229,12 +218,15 @@ Netlink) differs from Generic Netlink is provided later in this document.</p>
 </section>
 <section id="generic-netlink">
 <h2>Generic Netlink<a class="headerlink" href="#generic-netlink" title="Permalink to this heading">¶</a></h2>
+中文：除了Netlink固定元数据头之外，每个Netlink协议还定义了自己的固定元数据头。(类似于网络头的层叠顺序-以太网&gt; IP &gt; TCP，我们有Netlink &gt; 通用N. &gt; Family.)
 <p>In addition to the Netlink fixed metadata header each Netlink protocol
 defines its own fixed metadata header. (Similarly to how network
 headers stack - Ethernet &gt; IP &gt; TCP we have Netlink &gt; Generic N. &gt; Family.)</p>
+中文：Netlink消息总是以struct nlmsghdr开头，后面跟着一个特定协议的头部。在Generic Netlink的情况下，协议头是struct genlmsghdr。
 <p>A Netlink message always starts with <a class="reference internal" href="#c.nlmsghdr" title="nlmsghdr"><code class="xref c c-struct docutils literal notranslate"><span class="pre">struct</span> <span class="pre">nlmsghdr</span></code></a>, which is followed
 by a protocol-specific header. In case of Generic Netlink the protocol
 header is struct genlmsghdr.</p>
+中文：在通用Netlink情况下，字段的实际含义如下：
 <p>The practical meaning of the fields in case of Generic Netlink is as follows:</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">nlmsghdr</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">      </span><span class="n">__u32</span><span class="w">   </span><span class="n">nlmsg_len</span><span class="p">;</span><span class="w">      </span><span class="cm">/* Length of message including headers */</span><span class="w"></span>
@@ -251,6 +243,7 @@ header is struct genlmsghdr.</p>
 <span class="cm">/* TLV attributes follow... */</span><span class="w"></span>
 </pre></div>
 </div>
+中文：在经典Netlink中，nlmsghdr.nlmsg_type用于标识消息所属的子系统中的操作（例如，获取与netdev相关的信息）。通用Netlink需要在一个协议中同时多路复用多个子系统，因此它使用此字段来标识子系统，而genlmsghdr.cmd则用于标识操作。（有关如何查找所需子系统的Family ID的信息，请参阅解析Family ID。）请注意，这个字段的前16个值（0 - 15）在经典Netlink和通用Netlink中都保留给控制消息。有关更多详细信息，请参阅Netlink消息类型。
 <p>In Classic Netlink <code class="xref c c-member docutils literal notranslate"><span class="pre">nlmsghdr.nlmsg_type</span></code> used to identify
 which operation within the subsystem the message was referring to
 (e.g. get information about a netdev). Generic Netlink needs to mux
@@ -261,6 +254,7 @@ information on how to find the Family ID of the subsystem of interest.)
 Note that the first 16 values (0 - 15) of this field are reserved for
 control messages both in Classic Netlink and Generic Netlink.
 See <a class="reference internal" href="#nl-msg-type"><span class="std std-ref">Netlink message types</span></a> for more details.</p>
+中文：在Netlink套接字上，通常有3种常见的消息交换类型：
 <p>There are 3 usual types of message exchanges on a Netlink socket:</p>
 <blockquote>
 <div><ul class="simple">
@@ -269,9 +263,11 @@ See <a class="reference internal" href="#nl-msg-type"><span class="std std-ref">
 <li><p>getting asynchronous notifications (<code class="docutils literal notranslate"><span class="pre">multicast</span></code>).</p></li>
 </ul>
 </div></blockquote>
+中文：经典Netlink非常灵活，据称允许其他类型的交流发生，但实际上只有这三种被使用。
 <p>Classic Netlink is very flexible and presumably allows other types
 of exchanges to happen, but in practice those are the three that get
 used.</p>
+中文：异步通知是由内核发送并由订阅它们的用户套接字接收的。do和dump请求由用户发起。nlmsghdr.nlmsg_flags应设置如下：
 <p>Asynchronous notifications are sent by the kernel and received by
 the user sockets which subscribed to them. <code class="docutils literal notranslate"><span class="pre">do</span></code> and <code class="docutils literal notranslate"><span class="pre">dump</span></code> requests
 are initiated by the user. <code class="xref c c-member docutils literal notranslate"><span class="pre">nlmsghdr.nlmsg_flags</span></code> should
@@ -282,39 +278,54 @@ be set as follows:</p>
 <li><p>for <code class="docutils literal notranslate"><span class="pre">dump</span></code>: <code class="docutils literal notranslate"><span class="pre">NLM_F_REQUEST</span> <span class="pre">|</span> <span class="pre">NLM_F_ACK</span> <span class="pre">|</span> <span class="pre">NLM_F_DUMP</span></code></p></li>
 </ul>
 </div></blockquote>
+中文：nlmsghdr.nlmsg_seq 应设置为递增的值。该值在响应中被回显，实际上并无影响，但对于每个发送的消息都将其设置为递增值被认为是良好的卫生习惯。该字段的目的是将响应与请求进行匹配。异步通知将具有 nlmsghdr.nlmsg_seq 值为 0。
 <p><code class="xref c c-member docutils literal notranslate"><span class="pre">nlmsghdr.nlmsg_seq</span></code> should be a set to a monotonically
 increasing value. The value gets echoed back in responses and doesn’t
 matter in practice, but setting it to an increasing value for each
 message sent is considered good hygiene. The purpose of the field is
 matching responses to requests. Asynchronous notifications will have
 <code class="xref c c-member docutils literal notranslate"><span class="pre">nlmsghdr.nlmsg_seq</span></code> of <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+中文：nlmsghdr.nlmsg_pid 是 Netlink 的地址等同于。
+当与内核进行沟通时，该字段可以设置为 0。
+有关该字段的（不常见）用途，请参阅 nlmsg_pid。
 <p><code class="xref c c-member docutils literal notranslate"><span class="pre">nlmsghdr.nlmsg_pid</span></code> is the Netlink equivalent of an address.
 This field can be set to <code class="docutils literal notranslate"><span class="pre">0</span></code> when talking to the kernel.
 See <a class="reference internal" href="#nlmsg-pid"><span class="std std-ref">nlmsg_pid</span></a> for the (uncommon) uses of the field.</p>
+中文：genlmsghdr.version 的预期用途是允许对子系统提供的 API 进行版本控制。迄今为止，没有任何子系统对该字段做出重要的使用，因此将其设置为 1 似乎是一个安全的选择。
 <p>The expected use for <code class="xref c c-member docutils literal notranslate"><span class="pre">genlmsghdr.version</span></code> was to allow
 versioning of the APIs provided by the subsystems. No subsystem to
 date made significant use of this field, so setting it to <code class="docutils literal notranslate"><span class="pre">1</span></code> seems
 like a safe bet.</p>
 <section id="netlink-message-types">
 <span id="nl-msg-type"></span><h3>Netlink message types<a class="headerlink" href="#netlink-message-types" title="Permalink to this heading">¶</a></h3>
+中文：如前所述，nlmsghdr.nlmsg_type携带协议特定的值，但前16个标识符是保留的（第一个子系统特定的消息类型应该等于NLMSG_MIN_TYPE，即0x10）。
 <p>As previously mentioned <code class="xref c c-member docutils literal notranslate"><span class="pre">nlmsghdr.nlmsg_type</span></code> carries
 protocol specific values but the first 16 identifiers are reserved
 (first subsystem specific message type should be equal to
 <code class="docutils literal notranslate"><span class="pre">NLMSG_MIN_TYPE</span></code> which is <code class="docutils literal notranslate"><span class="pre">0x10</span></code>).</p>
+中文：只定义了4个Netlink控制消息：
 <p>There are only 4 Netlink control messages defined:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">NLMSG_NOOP</span></code> - ignore the message, not used in practice;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">NLMSG_ERROR</span></code> - carries the return code of an operation;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">NLMSG_DONE</span></code> - marks the end of a dump;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">NLMSG_OVERRUN</span></code> - socket buffer has overflown, not used to date.</p></li>
+<li>中文：NLMSG_NOOP - 忽略消息，在实践中不使用；
+<p><code class="docutils literal notranslate"><span class="pre">NLMSG_NOOP</span></code> - ignore the message, not used in practice;</p></li>
+<li>中文：NLMSG_ERROR - 携带操作的返回代码；
+<p><code class="docutils literal notranslate"><span class="pre">NLMSG_ERROR</span></code> - carries the return code of an operation;</p></li>
+<li>中文：NLMSG_DONE - 表示转储结束；
+<p><code class="docutils literal notranslate"><span class="pre">NLMSG_DONE</span></code> - marks the end of a dump;</p></li>
+<li>中文：NLMSG_OVERRUN - 套接字缓冲区溢出，迄今未使用。
+<p><code class="docutils literal notranslate"><span class="pre">NLMSG_OVERRUN</span></code> - socket buffer has overflown, not used to date.</p></li>
 </ul>
 </div></blockquote>
+中文：NLMSG_ERROR 和 NLMSG_DONE 是实际重要的。
+它们携带操作的返回码。请注意，除非在请求中设置了 NLM_F_ACK 标志，否则 如果没有错误，Netlink 将不会回复 NLMSG_ERROR。
+为了避免特殊处理这个怪异行为，建议始终设置 NLM_F_ACK。
 <p><code class="docutils literal notranslate"><span class="pre">NLMSG_ERROR</span></code> and <code class="docutils literal notranslate"><span class="pre">NLMSG_DONE</span></code> are of practical importance.
 They carry return codes for operations. Note that unless
 the <code class="docutils literal notranslate"><span class="pre">NLM_F_ACK</span></code> flag is set on the request Netlink will not respond
 with <code class="docutils literal notranslate"><span class="pre">NLMSG_ERROR</span></code> if there is no error. To avoid having to special-case
 this quirk it is recommended to always set <code class="docutils literal notranslate"><span class="pre">NLM_F_ACK</span></code>.</p>
+中文：NLMSG_ERROR的格式由struct nlmsgerr描述：
 <p>The format of <code class="docutils literal notranslate"><span class="pre">NLMSG_ERROR</span></code> is described by struct nlmsgerr:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>----------------------------------------------
 | struct nlmsghdr - response header          |
@@ -329,21 +340,28 @@ this quirk it is recommended to always set <code class="docutils literal notrans
 ----------------------------------------------
 </pre></div>
 </div>
+中文：这里有两个struct nlmsghdr的实例，第一个是响应的，第二个是请求的。NLMSG_ERROR携带有关导致错误的请求的信息。当尝试将请求与响应匹配或重新解析请求以将其转储到日志中时，这可能很有用。
 <p>There are two instances of <a class="reference internal" href="#c.nlmsghdr" title="nlmsghdr"><code class="xref c c-struct docutils literal notranslate"><span class="pre">struct</span> <span class="pre">nlmsghdr</span></code></a> here, first of the response
 and second of the request. <code class="docutils literal notranslate"><span class="pre">NLMSG_ERROR</span></code> carries the information about
 the request which led to the error. This could be useful when trying
 to match requests to responses or re-parse the request to dump it into
 logs.</p>
+中文：请求的有效载荷在报告成功（error == 0）的消息中不会被回显，
+或者如果设置了NETLINK_CAP_ACK的setsockopt()。后者是常见的，
+也许推荐的，因为从内核中读取每个请求的副本是相当浪费的。
+请求有效载荷的缺失由nlmsghdr.nlmsg_flags中的NLM_F_CAPPED标识。
 <p>The payload of the request is not echoed in messages reporting success
 (<code class="docutils literal notranslate"><span class="pre">error</span> <span class="pre">==</span> <span class="pre">0</span></code>) or if <code class="docutils literal notranslate"><span class="pre">NETLINK_CAP_ACK</span></code> setsockopt() was set.
 The latter is common
 and perhaps recommended as having to read a copy of every request back
 from the kernel is rather wasteful. The absence of request payload
 is indicated by <code class="docutils literal notranslate"><span class="pre">NLM_F_CAPPED</span></code> in <code class="xref c c-member docutils literal notranslate"><span class="pre">nlmsghdr.nlmsg_flags</span></code>.</p>
+中文：NLMSG_ERROR的第二个可选元素是扩展ACK属性。有关详细信息，请参阅扩展ACK。扩展ACK的存在由nlmsghdr.nlmsg_flags中的NLM_F_ACK_TLVS指示。
 <p>The second optional element of <code class="docutils literal notranslate"><span class="pre">NLMSG_ERROR</span></code> are the extended ACK
 attributes. See <a class="reference internal" href="#ext-ack"><span class="std std-ref">Extended ACK</span></a> for more details. The presence
 of extended ACK is indicated by <code class="docutils literal notranslate"><span class="pre">NLM_F_ACK_TLVS</span></code> in
 <code class="xref c c-member docutils literal notranslate"><span class="pre">nlmsghdr.nlmsg_flags</span></code>.</p>
+中文：NLMSG_DONE更简单，请求永远不会被回显，但扩展的ACK属性可能存在：
 <p><code class="docutils literal notranslate"><span class="pre">NLMSG_DONE</span></code> is simpler, the request is never echoed but the extended
 ACK attributes may be present:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>----------------------------------------------
@@ -358,15 +376,21 @@ ACK attributes may be present:</p>
 </section>
 <section id="resolving-the-family-id">
 <span id="res-fam"></span><h3>Resolving the Family ID<a class="headerlink" href="#resolving-the-family-id" title="Permalink to this heading">¶</a></h3>
+中文：本节将解释如何找到子系统的Family ID。
+它也作为通用Netlink通信的示例。
 <p>This section explains how to find the Family ID of a subsystem.
 It also serves as an example of Generic Netlink communication.</p>
+中文：通用Netlink本身是通过通用Netlink API公开的子系统。
+为了避免循环依赖，通用Netlink具有静态分配的Family ID（GENL_ID_CTRL，与NLMSG_MIN_TYPE相等）。
+通用Netlink家族实现了一种用于了解其他家族信息的命令（CTRL_CMD_GETFAMILY）。
 <p>Generic Netlink is itself a subsystem exposed via the Generic Netlink API.
 To avoid a circular dependency Generic Netlink has a statically allocated
 Family ID (<code class="docutils literal notranslate"><span class="pre">GENL_ID_CTRL</span></code> which is equal to <code class="docutils literal notranslate"><span class="pre">NLMSG_MIN_TYPE</span></code>).
 The Generic Netlink family implements a command used to find out information
 about other families (<code class="docutils literal notranslate"><span class="pre">CTRL_CMD_GETFAMILY</span></code>).</p>
+中文：要获取有关“test1”这个例子中命名的通用 Netlink 家族的信息，我们需要在先前打开的通用 Netlink 套接字上发送一条消息。该消息应目标为通用 Netlink 家族（1），是一个对 CTRL_CMD_GETFAMILY（3）的 do（2）调用。对此调用的转储版本将导致内核响应有关其所有已知家族的信息。最后但并非最不重要的是，必须指定问题家族的名称（4）作为具有适当类型的属性。
 <p>To get information about the Generic Netlink family named for example
-<code class="docutils literal notranslate"><span class="pre">&quot;test1&quot;</span></code> we need to send a message on the previously opened Generic Netlink
+<code class="docutils literal notranslate"><span class="pre">"test1"</span></code> we need to send a message on the previously opened Generic Netlink
 socket. The message should target the Generic Netlink Family (1), be a
 <code class="docutils literal notranslate"><span class="pre">do</span></code> (2) call to <code class="docutils literal notranslate"><span class="pre">CTRL_CMD_GETFAMILY</span></code> (3). A <code class="docutils literal notranslate"><span class="pre">dump</span></code> version of this
 call would make the kernel respond with information about <em>all</em> the families
@@ -381,7 +405,7 @@ to be specified (4) as an attribute with the appropriate type:</p>
 
 struct genlmsghdr:
   __u8 cmd:           CTRL_CMD_GETFAMILY         // (3)
-  __u8 version:       2 /* or 1, doesn&#39;t matter */
+  __u8 version:       2 /* or 1, doesn't matter */
   __u16 reserved:     0
 
 struct nlattr:                                   // (4)
@@ -393,11 +417,15 @@ struct nlattr:                                   // (4)
   char data:          \0\0
 </pre></div>
 </div>
+中文：Netlink（nlmsghdr.nlmsg_len 和 nlattr.nla_len）中的长度字段总是包含头部。
+Netlink 中的属性头必须从消息的开始处按照 4 个字节对齐，因此在 CTRL_ATTR_FAMILY_NAME 之后有额外的 \0\0。
+属性的长度不包括填充。
 <p>The length fields in Netlink (<code class="xref c c-member docutils literal notranslate"><span class="pre">nlmsghdr.nlmsg_len</span></code>
 and <code class="xref c c-member docutils literal notranslate"><span class="pre">nlattr.nla_len</span></code>) always <em>include</em> the header.
 Attribute headers in netlink must be aligned to 4 bytes from the start
 of the message, hence the extra <code class="docutils literal notranslate"><span class="pre">\0\0</span></code> after <code class="docutils literal notranslate"><span class="pre">CTRL_ATTR_FAMILY_NAME</span></code>.
 The attribute lengths <em>exclude</em> the padding.</p>
+中文：如果找到该族群，内核将回复两条消息，其中包含有关该族群的所有信息：
 <p>If the family is found kernel will reply with two messages, the response
 with all the information about the family:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/* Message #1 - reply */
@@ -437,12 +465,13 @@ struct nlattr:
 /* ... etc, more attributes will follow. */
 </pre></div>
 </div>
+中文：自从请求中设置了NLM_F_ACK标志以来，错误代码为(success)。
 <p>And the error code (success) since <code class="docutils literal notranslate"><span class="pre">NLM_F_ACK</span></code> had been set on the request:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/* Message #2 - the ACK */
 struct nlmsghdr:
   __u32 nlmsg_len:    36
   __u16 nlmsg_type:   NLMSG_ERROR
-  __u16 nlmsg_flags:  NLM_F_CAPPED /* There won&#39;t be a payload */
+  __u16 nlmsg_flags:  NLM_F_CAPPED /* There won't be a payload */
   __u32 nlmsg_seq:    1    /* echoed from our request */
   __u32 nlmsg_pid:    5831 /* The PID of our user space process */
 
@@ -456,8 +485,10 @@ struct nlmsghdr: /* Copy of the request header as we sent it */
   __u32 nlmsg_pid:    0
 </pre></div>
 </div>
+中文：属性（struct nlattr）的顺序不能保证，因此用户必须遍历属性并解析它们。
 <p>The order of attributes (struct nlattr) is not guaranteed so the user
 has to walk the attributes and parse them.</p>
+中文：请注意，通用Netlink套接字不与特定的家族关联或绑定。套接字可以用于与许多不同的家族交换消息，通过使用nlmsghdr.nlmsg_type字段，在消息与消息的基础上选择接收方的家族。
 <p>Note that Generic Netlink sockets are not associated or bound to a single
 family. A socket can be used to exchange messages with many different
 families, selecting the recipient family on message-by-message basis using
@@ -465,21 +496,29 @@ the <code class="xref c c-member docutils literal notranslate"><span class="pre"
 </section>
 <section id="extended-ack">
 <span id="ext-ack"></span><h3>Extended ACK<a class="headerlink" href="#extended-ack" title="Permalink to this heading">¶</a></h3>
+中文：通过NLMSG_ERROR和NLMSG_DONE消息，扩展ACK控制报告其他错误/警告TLV。为了保持向后兼容性，必须通过将NETLINK_EXT_ACK setsockopt()设置为1来显式启用此功能。
 <p>Extended ACK controls reporting of additional error/warning TLVs
 in <code class="docutils literal notranslate"><span class="pre">NLMSG_ERROR</span></code> and <code class="docutils literal notranslate"><span class="pre">NLMSG_DONE</span></code> messages. To maintain backward
 compatibility this feature has to be explicitly enabled by setting
 the <code class="docutils literal notranslate"><span class="pre">NETLINK_EXT_ACK</span></code> setsockopt() to <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+中文：扩展应答属性的类型在枚举nlmsgerr_attrs中定义。
+最常用的属性有NLMSGERR_ATTR_MSG、NLMSGERR_ATTR_OFFS和NLMSGERR_ATTR_MISS_*。
 <p>Types of extended ack attributes are defined in <a class="reference internal" href="#c.nlmsgerr_attrs" title="nlmsgerr_attrs"><code class="xref c c-enum docutils literal notranslate"><span class="pre">enum</span> <span class="pre">nlmsgerr_attrs</span></code></a>.
 The most commonly used attributes are <code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_MSG</span></code>,
 <code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_OFFS</span></code> and <code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_MISS_*</span></code>.</p>
+中文：NLMSGERR_ATTR_MSG携带了用英语描述遇到的问题的信息。这些信息比通过标准UNIX错误代码能够表达的要详细得多。
 <p><code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_MSG</span></code> carries a message in English describing
 the encountered problem. These messages are far more detailed
 than what can be expressed thru standard UNIX error codes.</p>
+中文：NLMSGERR_ATTR_OFFS指向导致问题的属性。
 <p><code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_OFFS</span></code> points to the attribute which caused the problem.</p>
 <p><code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_MISS_TYPE</span></code> and <code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_MISS_NEST</span></code>
 inform about a missing attribute.</p>
+中文：扩展的 ACKs 可以在错误情况下以及成功情况下进行报告。
+后者应该被视为警告。
 <p>Extended ACKs can be reported on errors as well as in case of success.
 The latter should be treated as a warning.</p>
+中文：扩展的 ACK 极大地提高了 Netlink 的可用性，并且应始终启用、适当解析并向用户报告。
 <p>Extended ACKs greatly improve the usability of Netlink and should
 always be enabled, appropriately parsed and reported to the user.</p>
 </section>
@@ -488,9 +527,11 @@ always be enabled, appropriately parsed and reported to the user.</p>
 <h2>Advanced topics<a class="headerlink" href="#advanced-topics" title="Permalink to this heading">¶</a></h2>
 <section id="dump-consistency">
 <h3>Dump consistency<a class="headerlink" href="#dump-consistency" title="Permalink to this heading">¶</a></h3>
+中文：内核用于存储对象的一些数据结构使得在转储中提供所有对象的原子快照变得困难（而不影响快速更新它们的路径）。
 <p>Some of the data structures kernel uses for storing objects make
 it hard to provide an atomic snapshot of all the objects in a dump
 (without impacting the fast-paths updating them).</p>
+中文：如果转储中断并且可能不一致（例如，缺少对象），内核可以在转储中的任何消息上设置NLM_F_DUMP_INTR标志（包括NLMSG_DONE消息）。如果用户空间看到该标志已设置，则应重试转储。
 <p>Kernel may set the <code class="docutils literal notranslate"><span class="pre">NLM_F_DUMP_INTR</span></code> flag on any message in a dump
 (including the <code class="docutils literal notranslate"><span class="pre">NLMSG_DONE</span></code> message) if the dump was interrupted and
 may be inconsistent (e.g. missing objects). User space should retry
@@ -498,6 +539,7 @@ the dump if it sees the flag set.</p>
 </section>
 <section id="introspection">
 <h3>Introspection<a class="headerlink" href="#introspection" title="Permalink to this heading">¶</a></h3>
+中文：基本的自省能力是通过对Family对象的访问来实现的，该对象根据Family ID解析进行报告。用户可以查询关于Generic Netlink家族的信息，包括内核支持的操作以及内核理解的属性。Family信息包括内核能够解析的属性的最高ID，另外一个命令（CTRL_CMD_GETPOLICY）可以提供关于支持的属性的详细信息，包括内核接受的值范围。
 <p>The basic introspection abilities are enabled by access to the Family
 object as reported in <a class="reference internal" href="#res-fam"><span class="std std-ref">Resolving the Family ID</span></a>. User can query information about
 the Generic Netlink family, including which operations are supported
@@ -505,34 +547,44 @@ by the kernel and what attributes the kernel understands.
 Family information includes the highest ID of an attribute kernel can parse,
 a separate command (<code class="docutils literal notranslate"><span class="pre">CTRL_CMD_GETPOLICY</span></code>) provides detailed information
 about supported attributes, including ranges of values the kernel accepts.</p>
+中文：查询家族信息在以下情况下是有用的，当用户空间需要确保内核在发出请求之前对某个功能提供支持时。
 <p>Querying family information is useful in cases when user space needs
 to make sure that the kernel has support for a feature before issuing
 a request.</p>
 </section>
 <section id="nlmsg-pid">
 <span id="id1"></span><h3>nlmsg_pid<a class="headerlink" href="#nlmsg-pid" title="Permalink to this heading">¶</a></h3>
+中文：nlmsghdr.nlmsg_pid是地址的Netlink等效物。
+它有时被称为Port ID，有时被称为Process ID，因为出于历史原因，
+如果应用程序未选择（bind（）到）显式的Port ID，内核将自动分配该ID等于其进程ID
+（由getpid()系统调用报告）。
 <p><code class="xref c c-member docutils literal notranslate"><span class="pre">nlmsghdr.nlmsg_pid</span></code> is the Netlink equivalent of an address.
 It is referred to as Port ID, sometimes Process ID because for historical
 reasons if the application does not select (bind() to) an explicit Port ID
 kernel will automatically assign it the ID equal to its Process ID
 (as reported by the getpid() system call).</p>
+中文：与TCP/IP网络协议的bind()语义类似，值为零表示“自动分配”，因此应用程序通常将nlmsghdr.nlmsg_pid字段保持初始化为0。
 <p>Similarly to the bind() semantics of the TCP/IP network protocols the value
 of zero means “assign automatically”, hence it is common for applications
 to leave the <code class="xref c c-member docutils literal notranslate"><span class="pre">nlmsghdr.nlmsg_pid</span></code> field initialized to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+中文：在罕见情况下，当内核需要发送单播通知时，今天仍然会使用该字段。用户空间应用程序可以使用bind（）将其套接字与特定PID关联起来，然后将其PID通信给内核。这样，内核就能够到达特定的用户空间进程。
 <p>The field is still used today in rare cases when kernel needs to send
 a unicast notification. User space application can use bind() to associate
 its socket with a specific PID, it then communicates its PID to the kernel.
 This way the kernel can reach the specific user space process.</p>
+中文：这种通信方式在UMH（用户模式辅助程序）类似场景中使用，当内核需要触发用户空间处理或请求用户空间进行策略决策时。
 <p>This sort of communication is utilized in UMH (User Mode Helper)-like
 scenarios when kernel needs to trigger user space processing or ask user
 space for a policy decision.</p>
 </section>
 <section id="multicast-notifications">
 <h3>Multicast notifications<a class="headerlink" href="#multicast-notifications" title="Permalink to this heading">¶</a></h3>
+中文：Netlink的一项优点是能够向用户空间发送事件通知。这是一种单向的通信形式（内核-&gt;用户），不涉及任何控制消息，如NLMSG_ERROR或NLMSG_DONE。
 <p>One of the strengths of Netlink is the ability to send event notifications
 to user space. This is a unidirectional form of communication (kernel -&gt;
 user) and does not involve any control messages like <code class="docutils literal notranslate"><span class="pre">NLMSG_ERROR</span></code> or
 <code class="docutils literal notranslate"><span class="pre">NLMSG_DONE</span></code>.</p>
+中文：例如，通用Netlink家族本身定义了一组关于注册家族的多播通知。当添加新的家族时，订阅通知的套接字将收到以下消息：
 <p>For example the Generic Netlink family itself defines a set of multicast
 notifications about registered families. When a new family is added the
 sockets subscribed to the notifications will get the following message:</p>
@@ -572,17 +624,22 @@ struct nlattr:
 /* ... etc, more attributes will follow. */
 </pre></div>
 </div>
+中文：通知包含与 CTRL_CMD_GETFAMILY 请求的响应相同的信息。
 <p>The notification contains the same information as the response
 to the <code class="docutils literal notranslate"><span class="pre">CTRL_CMD_GETFAMILY</span></code> request.</p>
+中文：通知的 Netlink 头大部分都是 0，并且不相关。
+nlmsghdr.nlmsg_seq 可以是零，也可以是由族类维护的单调递增的通知序列号。
 <p>The Netlink headers of the notification are mostly 0 and irrelevant.
 The <code class="xref c c-member docutils literal notranslate"><span class="pre">nlmsghdr.nlmsg_seq</span></code> may be either zero or a monotonically
 increasing notification sequence number maintained by the family.</p>
+中文：要接收通知，用户套接字必须订阅相应的通知组。就像家庭ID一样，给定多播组的组ID是动态的，并且可以在家庭信息中找到。CTRL_ATTR_MCAST_GROUPS属性包含具有名称（CTRL_ATTR_MCAST_GRP_NAME）和组ID（CTRL_ATTR_MCAST_GRP_ID）的嵌套组。
 <p>To receive notifications the user socket must subscribe to the relevant
 notification group. Much like the Family ID, the Group ID for a given
 multicast group is dynamic and can be found inside the Family information.
 The <code class="docutils literal notranslate"><span class="pre">CTRL_ATTR_MCAST_GROUPS</span></code> attribute contains nests with names
 (<code class="docutils literal notranslate"><span class="pre">CTRL_ATTR_MCAST_GRP_NAME</span></code>) and IDs (<code class="docutils literal notranslate"><span class="pre">CTRL_ATTR_MCAST_GRP_ID</span></code>) of
 the groups family.</p>
+中文：一旦知道了群组 ID，通过 setsockopt() 调用将套接字添加到群组：
 <p>Once the Group ID is known a setsockopt() call adds the socket to the group:</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">group_id</span><span class="p">;</span><span class="w"></span>
 
@@ -593,6 +650,7 @@ the groups family.</p>
 </pre></div>
 </div>
 <p>The socket will now receive notifications.</p>
+中文：建议使用单独的套接字来接收内核通知和发送请求。通知的异步性意味着它们可能会与响应混合在一起，使消息处理变得更加困难。
 <p>It is recommended to use separate sockets for receiving notifications
 and sending requests to the kernel. The asynchronous nature of notifications
 means that they may get mixed in with the responses making the message
@@ -600,13 +658,16 @@ handling much harder.</p>
 </section>
 <section id="buffer-sizing">
 <h3>Buffer sizing<a class="headerlink" href="#buffer-sizing" title="Permalink to this heading">¶</a></h3>
+中文：Netlink套接字是数据报套接字而不是流套接字，这意味着每个消息必须通过单个recv()/recvmsg()系统调用完整地接收。如果用户提供的缓冲区太短，消息将被截断，并在struct msghdr中设置MSG_TRUNC标志（struct msghdr是recvmsg()系统调用的第二个参数，而不是Netlink标头）。
 <p>Netlink sockets are datagram sockets rather than stream sockets,
 meaning that each message must be received in its entirety by a single
 recv()/recvmsg() system call. If the buffer provided by the user is too
 short, the message will be truncated and the <code class="docutils literal notranslate"><span class="pre">MSG_TRUNC</span></code> flag set
 in struct msghdr (struct msghdr is the second argument
 of the recvmsg() system call, <em>not</em> a Netlink header).</p>
+中文：在截断时，将丢弃剩余部分的信息。
 <p>Upon truncation the remaining part of the message is discarded.</p>
+中文：Netlink 需要用户缓冲区至少为8kB或者CPU架构的页面大小，以较大者为准。然而，特定的 Netlink 家族可能需要更大的缓冲区。建议使用32kB缓冲区来处理转储时更高效（更大的缓冲区适应更多转储对象，从而减少recvmsg()调用次数）。
 <p>Netlink expects that the user buffer will be at least 8kB or a page
 size of the CPU architecture, whichever is bigger. Particular Netlink
 families may, however, require a larger buffer. 32kB buffer is recommended
@@ -616,6 +677,8 @@ objects and therefore fewer recvmsg() calls are needed).</p>
 </section>
 <section id="classic-netlink">
 <h2>Classic Netlink<a class="headerlink" href="#classic-netlink" title="Permalink to this heading">¶</a></h2>
+中文：经典Netlink和通用Netlink之间的主要区别在于子系统标识符的动态分配和内省的可用性。
+从理论上讲，协议并无太大差异，然而在实践中，经典Netlink尝试了某些在通用Netlink中被放弃的概念（实际上，它们通常只在单个子系统的一个小角落中发现了用途）。本节旨在解释这些概念中的一些，明确目标是让通用Netlink用户在阅读uAPI头文件时可以自信地忽略它们。
 <p>The main differences between Classic and Generic Netlink are the dynamic
 allocation of subsystem identifiers and availability of introspection.
 In theory the protocol does not differ significantly, however, in practice
@@ -624,25 +687,32 @@ Netlink (really, they usually only found use in a small corner of a single
 subsystem). This section is meant as an explainer of a few of such concepts,
 with the explicit goal of giving the Generic Netlink
 users the confidence to ignore them when reading the uAPI headers.</p>
+中文：这里大部分的概念和示例都涉及NETLINK_ROUTE族，它涵盖了Linux网络堆栈的大部分配置。对于这个族的真正的文档，值得有一章（或一本书）来介绍。
 <p>Most of the concepts and examples here refer to the <code class="docutils literal notranslate"><span class="pre">NETLINK_ROUTE</span></code> family,
 which covers much of the configuration of the Linux networking stack.
 Real documentation of that family, deserves a chapter (or a book) of its own.</p>
 <section id="families">
 <h3>Families<a class="headerlink" href="#families" title="Permalink to this heading">¶</a></h3>
+中文：Netlink（网络链路）将子系统称为家族（families）。这是使用套接字和协议家族概念的遗留问题，它们是 NETLINK_ROUTE 中的消息多路复用的一部分。
 <p>Netlink refers to subsystems as families. This is a remnant of using
 sockets and the concept of protocol families, which are part of message
 demultiplexing in <code class="docutils literal notranslate"><span class="pre">NETLINK_ROUTE</span></code>.</p>
+中文：可惜的是，每一层封装都喜欢使用“族群”来指称它所携带的内容，这使得术语非常令人困惑：
 <p>Sadly every layer of encapsulation likes to refer to whatever it’s carrying
 as “families” making the term very confusing:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p>AF_NETLINK is a bona fide socket protocol family</p></li>
-<li><p>AF_NETLINK’s documentation refers to what comes after its own
+<li>中文：AF_NETLINK 是一个真正的套接字协议族。
+<p>AF_NETLINK is a bona fide socket protocol family</p></li>
+<li>中文：AF_NETLINK的文档将消息中的自身标题（struct nlmsghdr）之后的内容称为“Family Header”。
+<p>AF_NETLINK’s documentation refers to what comes after its own
 header (<a class="reference internal" href="#c.nlmsghdr" title="nlmsghdr"><code class="xref c c-struct docutils literal notranslate"><span class="pre">struct</span> <span class="pre">nlmsghdr</span></code></a>) in a message as a “Family Header”</p></li>
-<li><p>Generic Netlink is a family for AF_NETLINK (struct genlmsghdr follows
+<li>中文：通用Netlink是用于AF_NETLINK的家族（struct genlmsghdr遵循struct nlmsghdr），但它也将其用户称为“Families”。
+<p>Generic Netlink is a family for AF_NETLINK (struct genlmsghdr follows
 <a class="reference internal" href="#c.nlmsghdr" title="nlmsghdr"><code class="xref c c-struct docutils literal notranslate"><span class="pre">struct</span> <span class="pre">nlmsghdr</span></code></a>), yet it also calls its users “Families”.</p></li>
 </ol>
 </div></blockquote>
+中文：请注意，通用Netlink族ID位于不同的“ID空间”中，并与经典Netlink协议号重叠（例如，NETLINK_CRYPTO的经典Netlink协议ID为21，通用Netlink也将愉快地分配给其中一个族）。
 <p>Note that the Generic Netlink Family IDs are in a different “ID space”
 and overlap with Classic Netlink protocol numbers (e.g. <code class="docutils literal notranslate"><span class="pre">NETLINK_CRYPTO</span></code>
 has the Classic Netlink protocol ID of 21 which Generic Netlink will
@@ -650,11 +720,13 @@ happily allocate to one of its families as well).</p>
 </section>
 <section id="strict-checking">
 <h3>Strict checking<a class="headerlink" href="#strict-checking" title="Permalink to this heading">¶</a></h3>
+中文：NETLINK_GET_STRICT_CHK套接字选项可以在NETLINK_ROUTE中启用严格的输入检查。这是因为历史上内核没有验证其未处理的结构的字段。这使得在不正确或完全不初始化这些字段的应用程序中后续使用这些字段变得不可能，因为有可能出现回归问题。
 <p>The <code class="docutils literal notranslate"><span class="pre">NETLINK_GET_STRICT_CHK</span></code> socket option enables strict input checking
 in <code class="docutils literal notranslate"><span class="pre">NETLINK_ROUTE</span></code>. It was needed because historically kernel did not
 validate the fields of structures it didn’t process. This made it impossible
 to start using those fields later without risking regressions in applications
 which initialized them incorrectly or not at all.</p>
+中文：NETLINK_GET_STRICT_CHK 声明应用程序正在正确初始化所有字段。它还选择验证消息不包含尾随数据，并请求内核拒绝具有大于内核已知的最大属性类型的属性。
 <p><code class="docutils literal notranslate"><span class="pre">NETLINK_GET_STRICT_CHK</span></code> declares that the application is initializing
 all fields correctly. It also opts into validating that message does not
 contain trailing data and requests that kernel rejects attributes with
@@ -663,56 +735,71 @@ type higher than largest attribute type known to the kernel.</p>
 </section>
 <section id="unknown-attributes">
 <h3>Unknown attributes<a class="headerlink" href="#unknown-attributes" title="Permalink to this heading">¶</a></h3>
+中文：历史上，Netlink忽略了所有未知的属性。这样做的原因是为了使应用程序不必探测内核支持的内容。应用程序可以发出更改状态的请求，并检查请求的哪些部分“生效”。
 <p>Historically Netlink ignored all unknown attributes. The thinking was that
 it would free the application from having to probe what kernel supports.
 The application could make a request to change the state and check which
 parts of the request “stuck”.</p>
+中文：这对于新的通用Netlink族和选择启用严格检查的情况不再成立。有关所执行的验证类型，请参阅enum netlink_validation。
 <p>This is no longer the case for new Generic Netlink families and those opting
 in to strict checking. See enum netlink_validation for validation types
 performed.</p>
 </section>
 <section id="fixed-metadata-and-structures">
 <h3>Fixed metadata and structures<a class="headerlink" href="#fixed-metadata-and-structures" title="Permalink to this heading">¶</a></h3>
+中文：经典的Netlink在消息中广泛使用了固定格式的结构。消息通常在struct nlmsghdr后面有许多字段。通常还会将具有多个成员的结构放在属性中，而不是将每个成员分成自己的属性。
 <p>Classic Netlink made liberal use of fixed-format structures within
 the messages. Messages would commonly have a structure with
 a considerable number of fields after <a class="reference internal" href="#c.nlmsghdr" title="nlmsghdr"><code class="xref c c-struct docutils literal notranslate"><span class="pre">struct</span> <span class="pre">nlmsghdr</span></code></a>. It was also
 common to put structures with multiple members inside attributes,
 without breaking each member into an attribute of its own.</p>
+中文：这导致了验证和可扩展性方面的问题，
+因此，新的属性使用二进制结构的做法是被积极反对的。
 <p>This has caused problems with validation and extensibility and
 therefore using binary structures is actively discouraged for new
 attributes.</p>
 </section>
 <section id="request-types">
 <h3>Request types<a class="headerlink" href="#request-types" title="Permalink to this heading">¶</a></h3>
+中文：NETLINK_ROUTE将请求分为4种类型NEW，DEL，GET和SET。每个对象可以处理其中的所有或一部分请求（对象包括网络设备、路由、地址、队列等等）。请求类型由消息类型的最低2位定义，因此用于新对象的命令总是以4的步长进行分配。
 <p><code class="docutils literal notranslate"><span class="pre">NETLINK_ROUTE</span></code> categorized requests into 4 types <code class="docutils literal notranslate"><span class="pre">NEW</span></code>, <code class="docutils literal notranslate"><span class="pre">DEL</span></code>, <code class="docutils literal notranslate"><span class="pre">GET</span></code>,
 and <code class="docutils literal notranslate"><span class="pre">SET</span></code>. Each object can handle all or some of those requests
 (objects being netdevs, routes, addresses, qdiscs etc.) Request type
 is defined by the 2 lowest bits of the message type, so commands for
 new objects would always be allocated with a stride of 4.</p>
+中文：每个对象还将具有自己的固定元数据，这些元数据由所有请求类型共享（例如，结构体ifinfomsg用于netdev请求，结构体ifaddrmsg用于地址请求，结构体tcmsg用于qdisc请求）。
 <p>Each object would also have it’s own fixed metadata shared by all request
 types (e.g. struct ifinfomsg for netdev requests, struct ifaddrmsg for address
 requests, struct tcmsg for qdisc requests).</p>
+中文：即使其他协议和通用Netlink命令通常在其消息名称中使用相同的动词（GET，SET），请求类型的概念并未得到更广泛的应用。
 <p>Even though other protocols and Generic Netlink commands often use
 the same verbs in their message names (<code class="docutils literal notranslate"><span class="pre">GET</span></code>, <code class="docutils literal notranslate"><span class="pre">SET</span></code>) the concept
 of request types did not find wider adoption.</p>
 </section>
 <section id="notification-echo">
 <h3>Notification echo<a class="headerlink" href="#notification-echo" title="Permalink to this heading">¶</a></h3>
+中文：NLM_F_ECHO请求用于将与请求结果相关的通知排队到请求套接字上。这对于发现请求的影响非常有用。
 <p><code class="docutils literal notranslate"><span class="pre">NLM_F_ECHO</span></code> requests for notifications resulting from the request
 to be queued onto the requesting socket. This is useful to discover
 the impact of the request.</p>
+中文：请注意，此功能并非普遍实现。
 <p>Note that this feature is not universally implemented.</p>
 </section>
 <section id="other-request-type-specific-flags">
 <h3>Other request-type-specific flags<a class="headerlink" href="#other-request-type-specific-flags" title="Permalink to this heading">¶</a></h3>
+中文：Classic Netlink在struct nlmsghdr的nlmsg_flags的高字节中为其GET、NEW和DEL请求定义了各种标志。
+由于请求类型没有被概括，请求类型特定的标志很少使用（对于新族群来说被视为弃用）。
 <p>Classic Netlink defined various flags for its <code class="docutils literal notranslate"><span class="pre">GET</span></code>, <code class="docutils literal notranslate"><span class="pre">NEW</span></code>
 and <code class="docutils literal notranslate"><span class="pre">DEL</span></code> requests in the upper byte of nlmsg_flags in <a class="reference internal" href="#c.nlmsghdr" title="nlmsghdr"><code class="xref c c-struct docutils literal notranslate"><span class="pre">struct</span> <span class="pre">nlmsghdr</span></code></a>.
 Since request types have not been generalized the request type specific
 flags are rarely used (and considered deprecated for new families).</p>
+中文：对于GET操作，NLM_F_ROOT和NLM_F_MATCH被合并为NLM_F_DUMP，并且不再单独使用。NLM_F_ATOMIC永远不会被使用。
 <p>For <code class="docutils literal notranslate"><span class="pre">GET</span></code> - <code class="docutils literal notranslate"><span class="pre">NLM_F_ROOT</span></code> and <code class="docutils literal notranslate"><span class="pre">NLM_F_MATCH</span></code> are combined into
 <code class="docutils literal notranslate"><span class="pre">NLM_F_DUMP</span></code>, and not used separately. <code class="docutils literal notranslate"><span class="pre">NLM_F_ATOMIC</span></code> is never used.</p>
+中文：对于DEL - NLM_F_NONREC 仅在 nftables 中使用，而 NLM_F_BULK 仅在 FDB 的某些操作中使用。
 <p>For <code class="docutils literal notranslate"><span class="pre">DEL</span></code> - <code class="docutils literal notranslate"><span class="pre">NLM_F_NONREC</span></code> is only used by nftables and <code class="docutils literal notranslate"><span class="pre">NLM_F_BULK</span></code>
 only by FDB some operations.</p>
+中文：NEW标志在经典Netlink中最常用。不幸的是，它的含义并不十分清晰。以下描述基于作者的最佳猜测，实际上所有族群都会有所偏离。NLM_F_REPLACE用于替换现有对象，如果没有匹配的对象，操作应该失败。NLM_F_EXCL具有相反的语义，只有当对象已经存在时才成功。NLM_F_CREATE用于要求创建对象，如果对象不存在，可以与NLM_F_REPLACE和NLM_F_EXCL组合使用。
 <p>The flags for <code class="docutils literal notranslate"><span class="pre">NEW</span></code> are used most commonly in classic Netlink. Unfortunately,
 the meaning is not crystal clear. The following description is based on the
 best guess of the intention of the authors, and in practice all families
@@ -722,6 +809,7 @@ an existing object, if no matching object exists the operation should fail.
 existed.
 <code class="docutils literal notranslate"><span class="pre">NLM_F_CREATE</span></code> asks for the object to be created if it does not
 exist, it can be combined with <code class="docutils literal notranslate"><span class="pre">NLM_F_REPLACE</span></code> and <code class="docutils literal notranslate"><span class="pre">NLM_F_EXCL</span></code>.</p>
+中文：主Netlink uAPI头文件中的注释如下：
 <p>A comment in the main Netlink uAPI header states:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>4.4BSD ADD           NLM_F_CREATE|NLM_F_EXCL
 4.4BSD CHANGE        NLM_F_REPLACE
@@ -731,11 +819,15 @@ Append               NLM_F_CREATE
 Check                NLM_F_EXCL
 </pre></div>
 </div>
+中文：这似乎表明这些标志早于请求类型。
+NLM_F_REPLACE没有NLM_F_CREATE起初被用作SET命令的替代。
+没有NLM_F_CREATE的NLM_F_EXCL用于检查对象是否存在，很可能早于GET命令的出现。
 <p>which seems to indicate that those flags predate request types.
 <code class="docutils literal notranslate"><span class="pre">NLM_F_REPLACE</span></code> without <code class="docutils literal notranslate"><span class="pre">NLM_F_CREATE</span></code> was initially used instead
 of <code class="docutils literal notranslate"><span class="pre">SET</span></code> commands.
 <code class="docutils literal notranslate"><span class="pre">NLM_F_EXCL</span></code> without <code class="docutils literal notranslate"><span class="pre">NLM_F_CREATE</span></code> was used to check if object exists
 without creating it, presumably predating <code class="docutils literal notranslate"><span class="pre">GET</span></code> commands.</p>
+中文：NLM_F_APPEND表示如果一个键可以与多个对象相关联（例如，对于一条路由的多个下一跳对象），新对象应该添加到列表中而不是替换整个列表。
 <p><code class="docutils literal notranslate"><span class="pre">NLM_F_APPEND</span></code> indicates that if one key can have multiple objects associated
 with it (e.g. multiple next-hop objects for a route) the new object should be
 added to the list rather than replacing the entire list.</p>
@@ -745,10 +837,9 @@ added to the list rather than replacing the entire list.</p>
 <h2>uAPI reference<a class="headerlink" href="#uapi-reference" title="Permalink to this heading">¶</a></h2>
 <dl class="c struct">
 <dt class="sig sig-object c" id="c.nlmsghdr">
-<span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">nlmsghdr</span></span></span><a class="headerlink" href="#c.nlmsghdr" title="Permalink to this definition">¶</a><br /></dt>
+<span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">nlmsghdr</span></span></span><a class="headerlink" href="#c.nlmsghdr" title="Permalink to this definition">¶</a><br/></dt>
 <dd><p>fixed format metadata header of Netlink messages</p>
 </dd></dl>
-
 <div class="kernelindent docutils container">
 <p><strong>Definition</strong>:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct nlmsghdr {
@@ -776,10 +867,9 @@ added to the list rather than replacing the entire list.</p>
 </div>
 <dl class="c enum">
 <dt class="sig sig-object c" id="c.nlmsgerr_attrs">
-<span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">nlmsgerr_attrs</span></span></span><a class="headerlink" href="#c.nlmsgerr_attrs" title="Permalink to this definition">¶</a><br /></dt>
+<span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">nlmsgerr_attrs</span></span></span><a class="headerlink" href="#c.nlmsgerr_attrs" title="Permalink to this definition">¶</a><br/></dt>
 <dd><p>nlmsgerr attributes</p>
 </dd></dl>
-
 <div class="kernelindent docutils container">
 <p><strong>Constants</strong></p>
 <dl class="simple">
@@ -787,20 +877,25 @@ added to the list rather than replacing the entire list.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_MSG</span></code></dt><dd><p>error message string (string)</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_OFFS</span></code></dt><dd><p>offset of the invalid attribute in the original
+<dt><code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_OFFS</span></code></dt><dd>中文：无效属性在原始消息中的偏移量，从头部（u32）开始计算。
+<p>offset of the invalid attribute in the original
 message, counting from the beginning of the header (u32)</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_COOKIE</span></code></dt><dd><p>arbitrary subsystem specific cookie to
+<dt><code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_COOKIE</span></code></dt><dd>中文：任意子系统特定的cookie，在成功的情况下被用于标识创建的对象、操作或类似的（二进制）信息。
+<p>arbitrary subsystem specific cookie to
 be used - in the success case - to identify a created
 object or operation or similar (binary)</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_POLICY</span></code></dt><dd><p>policy for a rejected attribute</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_MISS_TYPE</span></code></dt><dd><p>type of a missing required attribute,
+<dt><code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_MISS_TYPE</span></code></dt><dd>中文：丢失必需属性的类型，
+如果属性在消息级别上丢失，则NLMSGERR_ATTR_MISS_NEST将不存在。
+<p>type of a missing required attribute,
 <code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_MISS_NEST</span></code> will not be present if the attribute was
 missing at the message level</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_MISS_NEST</span></code></dt><dd><p>offset of the nest where attribute was missing</p>
+<dt><code class="docutils literal notranslate"><span class="pre">NLMSGERR_ATTR_MISS_NEST</span></code></dt><dd>中文：缺少属性的嵌套位置的偏移量
+<p>offset of the nest where attribute was missing</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">__NLMSGERR_ATTR_MAX</span></code></dt><dd><p>number of attributes</p>
 </dd>
@@ -810,10 +905,9 @@ missing at the message level</p>
 </div>
 <dl class="c enum">
 <dt class="sig sig-object c" id="c.netlink_attribute_type">
-<span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">netlink_attribute_type</span></span></span><a class="headerlink" href="#c.netlink_attribute_type" title="Permalink to this definition">¶</a><br /></dt>
+<span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">netlink_attribute_type</span></span></span><a class="headerlink" href="#c.netlink_attribute_type" title="Permalink to this definition">¶</a><br/></dt>
 <dd><p>type of an attribute</p>
 </dd></dl>
-
 <div class="kernelindent docutils container">
 <p><strong>Constants</strong></p>
 <dl class="simple">
@@ -844,11 +938,13 @@ missing at the message level</p>
 <dt><code class="docutils literal notranslate"><span class="pre">NL_ATTR_TYPE_NUL_STRING</span></code></dt><dd><p>NUL-terminated string,
 min/max length may be specified</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">NL_ATTR_TYPE_NESTED</span></code></dt><dd><p>nested, i.e. the content of this attribute
+<dt><code class="docutils literal notranslate"><span class="pre">NL_ATTR_TYPE_NESTED</span></code></dt><dd>中文：嵌套，即该属性的内容由子属性组成。可以指定嵌套策略和最大类型。
+<p>nested, i.e. the content of this attribute
 consists of sub-attributes. The nested policy and maxtype
 inside may be specified.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">NL_ATTR_TYPE_NESTED_ARRAY</span></code></dt><dd><p>nested array, i.e. the content of this
+<dt><code class="docutils literal notranslate"><span class="pre">NL_ATTR_TYPE_NESTED_ARRAY</span></code></dt><dd>中文：嵌套数组，即此属性的内容包含子属性，其类型是无关紧要的（只用于分隔数组条目），并且每个这样的数组条目再次具有属性，可以指定用于这些内部属性的策略和相应的最大类型。
+<p>nested array, i.e. the content of this
 attribute contains sub-attributes whose type is irrelevant
 (just used to separate the array entries) and each such array
 entry has attributes again, the policy for those inner ones
@@ -860,10 +956,9 @@ and the corresponding maxtype may be specified.</p>
 </div>
 <dl class="c enum">
 <dt class="sig sig-object c" id="c.netlink_policy_type_attr">
-<span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">netlink_policy_type_attr</span></span></span><a class="headerlink" href="#c.netlink_policy_type_attr" title="Permalink to this definition">¶</a><br /></dt>
+<span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">netlink_policy_type_attr</span></span></span><a class="headerlink" href="#c.netlink_policy_type_attr" title="Permalink to this definition">¶</a><br/></dt>
 <dd><p>policy type attributes</p>
 </dd></dl>
-
 <div class="kernelindent docutils container">
 <p><strong>Constants</strong></p>
 <dl class="simple">
@@ -884,16 +979,22 @@ integers (U64)</p>
 <dt><code class="docutils literal notranslate"><span class="pre">NL_POLICY_TYPE_ATTR_MAX_VALUE_U</span></code></dt><dd><p>maximum value for unsigned
 integers (U64)</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">NL_POLICY_TYPE_ATTR_MIN_LENGTH</span></code></dt><dd><p>minimum length for binary
+<dt><code class="docutils literal notranslate"><span class="pre">NL_POLICY_TYPE_ATTR_MIN_LENGTH</span></code></dt><dd>中文：二进制属性的最小长度，如果没有指定则没有最小长度（U32）
+<p>minimum length for binary
 attributes, no minimum if not given (U32)</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">NL_POLICY_TYPE_ATTR_MAX_LENGTH</span></code></dt><dd><p>maximum length for binary
+<dt><code class="docutils literal notranslate"><span class="pre">NL_POLICY_TYPE_ATTR_MAX_LENGTH</span></code></dt><dd>中文：二进制属性的最大长度，如果没有指定则没有最大值（U32）。
+<p>maximum length for binary
 attributes, no maximum if not given (U32)</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">NL_POLICY_TYPE_ATTR_POLICY_IDX</span></code></dt><dd><p>sub policy for nested and
+<dt><code class="docutils literal notranslate"><span class="pre">NL_POLICY_TYPE_ATTR_POLICY_IDX</span></code></dt><dd>中文：嵌套和嵌套数组类型（U32）的子策略
+<p>sub policy for nested and
 nested array types (U32)</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">NL_POLICY_TYPE_ATTR_POLICY_MAXTYPE</span></code></dt><dd><p>maximum sub policy
+<dt><code class="docutils literal notranslate"><span class="pre">NL_POLICY_TYPE_ATTR_POLICY_MAXTYPE</span></code></dt><dd>中文：最大的子策略
+用于嵌套和嵌套数组类型的属性，理论上可以小于由索引指向的策略大小，
+如果在嵌套中受到限制（U32）
+<p>maximum sub policy
 attribute for nested and nested array types, this can
 in theory be &lt; the size of the policy pointed to by
 the index, if limited inside the nesting (U32)</p>
@@ -903,7 +1004,8 @@ bitfield32 type (U32)</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">NL_POLICY_TYPE_ATTR_PAD</span></code></dt><dd><p>pad attribute for 64-bit alignment</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">NL_POLICY_TYPE_ATTR_MASK</span></code></dt><dd><p>mask of valid bits for unsigned integers (U64)</p>
+<dt><code class="docutils literal notranslate"><span class="pre">NL_POLICY_TYPE_ATTR_MASK</span></code></dt><dd>中文：无符号整数（U64）的有效位屏蔽值
+<p>mask of valid bits for unsigned integers (U64)</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">__NL_POLICY_TYPE_ATTR_MAX</span></code></dt><dd><p>number of attributes</p>
 </dd>
@@ -913,28 +1015,20 @@ bitfield32 type (U32)</p>
 </div>
 </section>
 </section>
-
-
-          </div>
-          
-        </div>
-      </div>
-    <div class="clearer"></div>
-  </div>
-    <div class="footer">
-      &copy;The kernel development community.
+</div>
+</div>
+</div>
+<div class="clearer"></div>
+</div>
+<div class="footer">
+      ©The kernel development community.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../../_sources/userspace-api/netlink/intro.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+      <a href="../../_sources/userspace-api/netlink/intro.rst.txt" rel="nofollow">Page source</a>
+</div>
+</body>
 </html>
