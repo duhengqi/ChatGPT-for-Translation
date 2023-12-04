@@ -108,8 +108,8 @@ def parse_arguments():
     return options
 
 def modify_html():
-    test_file="D:/oscode/ChatGPT-for-Translation/v6.3/networking/ethtool-netlink.html"
-    trans_file="D:/oscode/ChatGPT-for-Translation/v6.3/networking/ethtool-netlink_trans.html"
+    test_file="/code/ChatGPT-for-Translation/v6.3/userspace-api/netlink/intro.html"
+    trans_file="/code/ChatGPT-for-Translation/v6.3/userspace-api/netlink/intro.html"
 
     options = parse_arguments()
     with open(test_file, "r", encoding='utf-8') as f:
@@ -140,7 +140,7 @@ def modify_html():
             i += 1
     # 获取修改后的HTML
     modified_html = str(soup)
-    with open("D:/oscode/ChatGPT-for-Translation/v6.3/networking/ethtool-netlink_trans.html", "w", encoding='utf-8') as f:
+    with open(trans_file, "w", encoding='utf-8') as f:
         f.write(modified_html)
 
 
