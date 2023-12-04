@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.17: http://docutils.sourceforge.net/" name="generator"/>
+<title>Netlink spec C code generation — The Linux Kernel  documentation</title>
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/alabaster.css" rel="stylesheet" type="text/css"/>
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script>
+<script src="../../_static/underscore.js"></script>
+<script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../../_static/doctools.js"></script>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="genetlink-legacy.html" rel="next" title="Netlink specification support for legacy Generic Netlink families"/>
+<link href="specs.html" rel="prev" title="Netlink protocol specifications (in YAML)"/>
+<link href="../../_static/custom.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=0.9, maximum-scale=0.9" name="viewport"/>
+</head><body>
+<div class="document">
+<div aria-label="main navigation" class="sphinxsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">The Linux Kernel</a></h1>
+<p class="blurb">6.3.0</p>
+<div id="searchbox" role="search" style="display: none">
+<h3 id="searchlabel">Quick search</h3>
+<div class="searchformwrapper">
+<form action="../../search.html" class="search" method="get">
+<input aria-labelledby="searchlabel" autocapitalize="off" autocomplete="off" autocorrect="off" name="q" spellcheck="false" type="text"/>
+<input type="submit" value="Go"/>
+</form>
+</div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script><!-- SPDX-License-Identifier: GPL-2.0 -->
+<p>
+<h3 class="kernel-toc-contents">Contents</h3>
+<input checked="" class="kernel-toc-toggle" id="kernel-toc-toggle" type="checkbox"/>
+<label class="kernel-toc-title" for="kernel-toc-toggle"></label>
+<div class="kerneltoc" id="kerneltoc">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../process/development-process.html">A guide to the Kernel Development Process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../process/submitting-patches.html">Submitting patches: the essential guide to getting your code into the kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../process/code-of-conduct.html">Code of conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../maintainer/index.html">Kernel Maintainer Handbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../process/index.html">All development-process docs</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../core-api/index.html">Core API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../driver-api/index.html">Driver implementer’s API guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../subsystem-apis.html">Kernel subsystem documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../locking/index.html">Locking in the kernel</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../process/license-rules.html">Linux kernel licensing rules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../doc-guide/index.html">How to write kernel documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev-tools/index.html">Development tools for the kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev-tools/testing-overview.html">Kernel Testing Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel-hacking/index.html">Kernel Hacking Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../trace/index.html">Linux Tracing Technologies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fault-injection/index.html">fault-injection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../livepatch/index.html">Kernel Livepatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rust/index.html">Rust</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../admin-guide/index.html">The Linux kernel user’s and administrator’s guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kbuild/index.html">The kernel build system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../admin-guide/reporting-issues.html">Reporting issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tools/index.html">User-space tools</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">The Linux kernel user-space API guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../no_new_privs.html">No New Privileges Flag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../seccomp_filter.html">Seccomp BPF (SECure COMPuting with filters)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../landlock.html">Landlock: unprivileged access control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unshare.html">unshare system call</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../spec_ctrl.html">Speculation Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../accelerators/ocxl.html">OpenCAPI (Open Coherent Accelerator Processor Interface)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ebpf/index.html">eBPF Userspace API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ioctl/index.html">IOCTLs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iommu.html">IOMMU Userspace API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iommufd.html">IOMMUFD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../media/index.html">Linux Media Infrastructure userspace API</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Netlink Handbook</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="intro.html">Introduction to Netlink</a></li>
+<li class="toctree-l3"><a class="reference internal" href="intro-specs.html">Using Netlink protocol specifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="specs.html">Netlink protocol specifications (in YAML)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Netlink spec C code generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="genetlink-legacy.html">Netlink specification support for legacy Generic Netlink families</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../sysfs-platform_profile.html">Platform Profile Selection (e.g. /sys/firmware/acpi/platform_profile)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vduse.html">VDUSE - “vDPA Device in Userspace”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../futex2.html">futex2</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../firmware-guide/index.html">The Linux kernel firmware guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../devicetree/index.html">Open Firmware and Devicetree</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../arch.html">CPU Architectures</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../staging/index.html">Unsorted Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../translations/index.html">Translations</a></li>
+</ul>
+</div>
+<script type="text/javascript"> <!--
+  var sbar = document.getElementsByClassName("sphinxsidebar")[0];
+  let currents = document.getElementsByClassName("current")
+  sbar.scrollTop = currents[currents.length - 1].offsetTop;
+  --> </script>
+<div aria-label="source link" role="note">
+<h3>This Page</h3>
+<ul class="this-page-menu">
+<li><a href="../../_sources/userspace-api/netlink/c-code-gen.rst.txt" rel="nofollow">Show Source</a></li>
+</ul>
+</div>
+</p></div>
+</div>
+<div class="documentwrapper">
+<div class="bodywrapper">
+<div class="body" role="main">
+<section id="netlink-spec-c-code-generation">
+<h1>Netlink spec C code generation<a class="headerlink" href="#netlink-spec-c-code-generation" title="Permalink to this heading">¶</a></h1>
+中文：本文描述了Netlink规范的使用方式，用于渲染C代码（uAPI，策略等）。它还通过genetlink-c协议级别定义了旧族系中允许使用的附加属性，用于控制命名。
+<p>This document describes how Netlink specifications are used to render
+C code (uAPI, policies etc.). It also defines the additional properties
+allowed in older families by the <code class="docutils literal notranslate"><span class="pre">genetlink-c</span></code> protocol level,
+to control the naming.</p>
+中文：为了简洁起见，本文档使用对象类型来指代各种对象的名称属性。例如，$attr 表示属性的值，$family 表示家族的名称（全局名称属性）。
+<p>For brevity this document refers to <code class="docutils literal notranslate"><span class="pre">name</span></code> properties of various
+objects by the object type. For example <code class="docutils literal notranslate"><span class="pre">$attr</span></code> is the value
+of <code class="docutils literal notranslate"><span class="pre">name</span></code> in an attribute, and <code class="docutils literal notranslate"><span class="pre">$family</span></code> is the name of the
+family (the global <code class="docutils literal notranslate"><span class="pre">name</span></code> property).</p>
+中文：大写字母用于表示字面值，例如 $family-CMD 表示 $family、一个破折号字符和字面值 CMD 的连结。
+<p>The upper case is used to denote literal values, e.g. <code class="docutils literal notranslate"><span class="pre">$family-CMD</span></code>
+means the concatenation of <code class="docutils literal notranslate"><span class="pre">$family</span></code>, a dash character, and the literal
+<code class="docutils literal notranslate"><span class="pre">CMD</span></code>.</p>
+中文：#defines 和枚举值的名称都会被转换为大写字母，并用下划线(_)替换连字符(-)。
+<p>The names of <code class="docutils literal notranslate"><span class="pre">#defines</span></code> and enum values are always converted to upper case,
+and with dashes (<code class="docutils literal notranslate"><span class="pre">-</span></code>) replaced by underscores (<code class="docutils literal notranslate"><span class="pre">_</span></code>).</p>
+中文：如果构建的名称是C关键字，则会添加一个额外的下划线（do -&gt; do_）。
+<p>If the constructed name is a C keyword, an extra underscore is
+appended (<code class="docutils literal notranslate"><span class="pre">do</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">do_</span></code>).</p>
+<section id="globals">
+<h2>Globals<a class="headerlink" href="#globals" title="Permalink to this heading">¶</a></h2>
+中文：c-family-name 控制家族名称的 #define， 默认值为 $family-FAMILY-NAME。
+<p><code class="docutils literal notranslate"><span class="pre">c-family-name</span></code> controls the name of the <code class="docutils literal notranslate"><span class="pre">#define</span></code> for the family
+name, default is <code class="docutils literal notranslate"><span class="pre">$family-FAMILY-NAME</span></code>.</p>
+中文：c-version-name 控制着版本族的#define名称，默认为 $family-FAMILY-VERSION。
+<p><code class="docutils literal notranslate"><span class="pre">c-version-name</span></code> controls the name of the <code class="docutils literal notranslate"><span class="pre">#define</span></code> for the version
+of the family, default is <code class="docutils literal notranslate"><span class="pre">$family-FAMILY-VERSION</span></code>.</p>
+中文：max-by-define选择是否将枚举的最大值定义为#define，而不是在枚举内部。
+<p><code class="docutils literal notranslate"><span class="pre">max-by-define</span></code> selects if max values for enums are defined as a
+<code class="docutils literal notranslate"><span class="pre">#define</span></code> rather than inside the enum.</p>
+</section>
+<section id="definitions">
+<h2>Definitions<a class="headerlink" href="#definitions" title="Permalink to this heading">¶</a></h2>
+<section id="constants">
+<h3>Constants<a class="headerlink" href="#constants" title="Permalink to this heading">¶</a></h3>
+中文：每个常量都被渲染为 #define。
+常量的名称是 $family-$constant，值根据规范的类型被渲染为字符串或整数。
+<p>Every constant is rendered as a <code class="docutils literal notranslate"><span class="pre">#define</span></code>.
+The name of the constant is <code class="docutils literal notranslate"><span class="pre">$family-$constant</span></code> and the value
+is rendered as a string or integer according to its type in the spec.</p>
+</section>
+<section id="enums-and-flags">
+<h3>Enums and flags<a class="headerlink" href="#enums-and-flags" title="Permalink to this heading">¶</a></h3>
+中文：枚举类型的命名规则为$family-$enum。可以直接设置全名，也可通过指定enum-name属性进行省略。
+默认的条目名为$family-$enum-$entry。
+如果指定了name-prefix，它将替换条目名中的$family-$enum部分。
+<p>Enums are named <code class="docutils literal notranslate"><span class="pre">$family-$enum</span></code>. The full name can be set directly
+or suppressed by specifying the <code class="docutils literal notranslate"><span class="pre">enum-name</span></code> property.
+Default entry name is <code class="docutils literal notranslate"><span class="pre">$family-$enum-$entry</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">name-prefix</span></code> is specified it replaces the <code class="docutils literal notranslate"><span class="pre">$family-$enum</span></code>
+portion of the entry name.</p>
+中文：布尔渲染-max控制最大值的创建
+（对于属性枚举，默认情况下启用）。
+<p>Boolean <code class="docutils literal notranslate"><span class="pre">render-max</span></code> controls creation of the max values
+(which are enabled by default for attribute enums).</p>
+</section>
+</section>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading">¶</a></h2>
+中文：每个属性集（不包括分数集）都被渲染为枚举类型。
+<p>Each attribute set (excluding fractional sets) is rendered as an enum.</p>
+中文：在netlink头文件中，属性枚举通常是不带名称的。
+如果需要指定名称，则可以使用enum-name来指定名称。
+<p>Attribute enums are traditionally unnamed in netlink headers.
+If naming is desired <code class="docutils literal notranslate"><span class="pre">enum-name</span></code> can be used to specify the name.</p>
+中文：默认的属性名前缀是 $family-A，如果集合的名称与族群的名称相同，否则为 $family-A-$set。前缀可以通过集合的 name-prefix 属性覆盖。本节其余部分将使用 $pfx 作为前缀。
+<p>The default attribute name prefix is <code class="docutils literal notranslate"><span class="pre">$family-A</span></code> if the name of the set
+is the same as the name of the family and <code class="docutils literal notranslate"><span class="pre">$family-A-$set</span></code> if the names
+differ. The prefix can be overridden by the <code class="docutils literal notranslate"><span class="pre">name-prefix</span></code> property of a set.
+The rest of the section will refer to the prefix as <code class="docutils literal notranslate"><span class="pre">$pfx</span></code>.</p>
+<p>Attributes are named <code class="docutils literal notranslate"><span class="pre">$pfx-$attribute</span></code>.</p>
+中文：属性枚举以两个特殊值__$pfx-MAX和$pfx-MAX作为结尾，用于确定属性表的大小。这两个名称可以分别通过attr-cnt-name和attr-max-name属性直接指定。
+<p>Attribute enums end with two special values <code class="docutils literal notranslate"><span class="pre">__$pfx-MAX</span></code> and <code class="docutils literal notranslate"><span class="pre">$pfx-MAX</span></code>
+which are used for sizing attribute tables.
+These two names can be specified directly with the <code class="docutils literal notranslate"><span class="pre">attr-cnt-name</span></code>
+and <code class="docutils literal notranslate"><span class="pre">attr-max-name</span></code> properties respectively.</p>
+中文：如果在全局级别将max-by-define设置为true，attr-max-name将被指定为#define而不是枚举值。
+<p>If <code class="docutils literal notranslate"><span class="pre">max-by-define</span></code> is set to <code class="docutils literal notranslate"><span class="pre">true</span></code> at the global level <code class="docutils literal notranslate"><span class="pre">attr-max-name</span></code>
+will be specified as a <code class="docutils literal notranslate"><span class="pre">#define</span></code> rather than an enum value.</p>
+</section>
+<section id="operations">
+<h2>Operations<a class="headerlink" href="#operations" title="Permalink to this heading">¶</a></h2>
+中文：操作被命名为$family-CMD-$operation。
+如果指定了名称前缀，则替换名称中的$family-CMD部分。
+<p>Operations are named <code class="docutils literal notranslate"><span class="pre">$family-CMD-$operation</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">name-prefix</span></code> is specified it replaces the <code class="docutils literal notranslate"><span class="pre">$family-CMD</span></code>
+portion of the name.</p>
+中文：与属性枚举类似，操作枚举以特殊的计数和最大属性结尾。
+对于操作，这些属性可以使用 cmd-cnt-name 和 cmd-max-name 进行重命名。
+如果max-by-define为true，那么Max将会是一个定义。
+<p>Similarly to attribute enums operation enums end with special count and max
+attributes. For operations those attributes can be renamed with
+<code class="docutils literal notranslate"><span class="pre">cmd-cnt-name</span></code> and <code class="docutils literal notranslate"><span class="pre">cmd-max-name</span></code>. Max will be a define if <code class="docutils literal notranslate"><span class="pre">max-by-define</span></code>
+is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</section>
+<section id="multicast-groups">
+<h2>Multicast groups<a class="headerlink" href="#multicast-groups" title="Permalink to this heading">¶</a></h2>
+中文：每个多播组都会在内核uAPI头文件中生成一个定义。
+定义的名称是$family-MCGRP-$group，并且可以使用c-define-name属性进行覆盖。
+<p>Each multicast group gets a define rendered into the kernel uAPI header.
+The name of the define is <code class="docutils literal notranslate"><span class="pre">$family-MCGRP-$group</span></code>, and can be overwritten
+with the <code class="docutils literal notranslate"><span class="pre">c-define-name</span></code> property.</p>
+</section>
+<section id="code-generation">
+<h2>Code generation<a class="headerlink" href="#code-generation" title="Permalink to this heading">¶</a></h2>
+中文：uAPI头文件默认从搜索路径中的&lt;linux/$family.h&gt;导入。可以使用uapi-header全局属性进行更改。
+<p>uAPI header is assumed to come from <code class="docutils literal notranslate"><span class="pre">&lt;linux/$family.h&gt;</span></code> in the default header
+search path. It can be changed using the <code class="docutils literal notranslate"><span class="pre">uapi-header</span></code> global property.</p>
+</section>
+</section>
+</div>
+</div>
+</div>
+<div class="clearer"></div>
+</div>
+<div class="footer">
+      ©The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/userspace-api/netlink/c-code-gen.rst.txt" rel="nofollow">Page source</a>
+</div>
+</body>
+</html>

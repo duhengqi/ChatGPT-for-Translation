@@ -173,8 +173,8 @@ def translate_html_file(input_path, options):
             origin_text_list.append(tag.text)
             # empty_line = NavigableString("中文："+tag.text+"\n")
             # tag.insert_before(empty_line)
-    # translated_text_list = translate_text_file(origin_text_list, options)
-    translated_text_list = origin_text_list
+    translated_text_list = translate_text_file(origin_text_list, options)
+    # translated_text_list = origin_text_list
     i = 0
     for index, tag in enumerate(target_tags):
         if index == 1:

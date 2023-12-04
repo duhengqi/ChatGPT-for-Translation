@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.17: http://docutils.sourceforge.net/" name="generator"/>
+<title>Netlink specification support for legacy Generic Netlink families — The Linux Kernel  documentation</title>
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/alabaster.css" rel="stylesheet" type="text/css"/>
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script>
+<script src="../../_static/underscore.js"></script>
+<script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../../_static/doctools.js"></script>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="../sysfs-platform_profile.html" rel="next" title="Platform Profile Selection (e.g. /sys/firmware/acpi/platform_profile)"/>
+<link href="c-code-gen.html" rel="prev" title="Netlink spec C code generation"/>
+<link href="../../_static/custom.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=0.9, maximum-scale=0.9" name="viewport"/>
+</head><body>
+<div class="document">
+<div aria-label="main navigation" class="sphinxsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">The Linux Kernel</a></h1>
+<p class="blurb">6.3.0</p>
+<div id="searchbox" role="search" style="display: none">
+<h3 id="searchlabel">Quick search</h3>
+<div class="searchformwrapper">
+<form action="../../search.html" class="search" method="get">
+<input aria-labelledby="searchlabel" autocapitalize="off" autocomplete="off" autocorrect="off" name="q" spellcheck="false" type="text"/>
+<input type="submit" value="Go"/>
+</form>
+</div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script><!-- SPDX-License-Identifier: GPL-2.0 -->
+<p>
+<h3 class="kernel-toc-contents">Contents</h3>
+<input checked="" class="kernel-toc-toggle" id="kernel-toc-toggle" type="checkbox"/>
+<label class="kernel-toc-title" for="kernel-toc-toggle"></label>
+<div class="kerneltoc" id="kerneltoc">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../process/development-process.html">A guide to the Kernel Development Process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../process/submitting-patches.html">Submitting patches: the essential guide to getting your code into the kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../process/code-of-conduct.html">Code of conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../maintainer/index.html">Kernel Maintainer Handbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../process/index.html">All development-process docs</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../core-api/index.html">Core API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../driver-api/index.html">Driver implementer’s API guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../subsystem-apis.html">Kernel subsystem documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../locking/index.html">Locking in the kernel</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../process/license-rules.html">Linux kernel licensing rules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../doc-guide/index.html">How to write kernel documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev-tools/index.html">Development tools for the kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev-tools/testing-overview.html">Kernel Testing Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel-hacking/index.html">Kernel Hacking Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../trace/index.html">Linux Tracing Technologies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fault-injection/index.html">fault-injection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../livepatch/index.html">Kernel Livepatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rust/index.html">Rust</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../admin-guide/index.html">The Linux kernel user’s and administrator’s guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kbuild/index.html">The kernel build system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../admin-guide/reporting-issues.html">Reporting issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tools/index.html">User-space tools</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">The Linux kernel user-space API guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../no_new_privs.html">No New Privileges Flag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../seccomp_filter.html">Seccomp BPF (SECure COMPuting with filters)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../landlock.html">Landlock: unprivileged access control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unshare.html">unshare system call</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../spec_ctrl.html">Speculation Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../accelerators/ocxl.html">OpenCAPI (Open Coherent Accelerator Processor Interface)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ebpf/index.html">eBPF Userspace API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ioctl/index.html">IOCTLs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iommu.html">IOMMU Userspace API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iommufd.html">IOMMUFD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../media/index.html">Linux Media Infrastructure userspace API</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Netlink Handbook</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="intro.html">Introduction to Netlink</a></li>
+<li class="toctree-l3"><a class="reference internal" href="intro-specs.html">Using Netlink protocol specifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="specs.html">Netlink protocol specifications (in YAML)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c-code-gen.html">Netlink spec C code generation</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Netlink specification support for legacy Generic Netlink families</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../sysfs-platform_profile.html">Platform Profile Selection (e.g. /sys/firmware/acpi/platform_profile)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vduse.html">VDUSE - “vDPA Device in Userspace”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../futex2.html">futex2</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../firmware-guide/index.html">The Linux kernel firmware guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../devicetree/index.html">Open Firmware and Devicetree</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../arch.html">CPU Architectures</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../staging/index.html">Unsorted Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../translations/index.html">Translations</a></li>
+</ul>
+</div>
+<script type="text/javascript"> <!--
+  var sbar = document.getElementsByClassName("sphinxsidebar")[0];
+  let currents = document.getElementsByClassName("current")
+  sbar.scrollTop = currents[currents.length - 1].offsetTop;
+  --> </script>
+<div aria-label="source link" role="note">
+<h3>This Page</h3>
+<ul class="this-page-menu">
+<li><a href="../../_sources/userspace-api/netlink/genetlink-legacy.rst.txt" rel="nofollow">Show Source</a></li>
+</ul>
+</div>
+</p></div>
+</div>
+<div class="documentwrapper">
+<div class="bodywrapper">
+<div class="body" role="main">
+<section id="netlink-specification-support-for-legacy-generic-netlink-families">
+<h1>Netlink specification support for legacy Generic Netlink families<a class="headerlink" href="#netlink-specification-support-for-legacy-generic-netlink-families" title="Permalink to this heading">¶</a></h1>
+中文：这份文档描述了许多额外的怪癖和属性，用于描述形成genetlink-legacy 协议级别的旧款通用 Netlink 家族。
+<p>This document describes the many additional quirks and properties
+required to describe older Generic Netlink families which form
+the <code class="docutils literal notranslate"><span class="pre">genetlink-legacy</span></code> protocol level.</p>
+中文：该规范是一个正在进行中的工作，其中一些特殊情况只是为了将来的参考而记录下来。
+<p>The spec is a work in progress, some of the quirks are just documented
+for future reference.</p>
+<section id="specification-defined">
+<h2>Specification (defined)<a class="headerlink" href="#specification-defined" title="Permalink to this heading">¶</a></h2>
+<section id="attribute-type-nests">
+<h3>Attribute type nests<a class="headerlink" href="#attribute-type-nests" title="Permalink to this heading">¶</a></h3>
+中文：新的Netlink族应该使用multi-attr来定义数组。
+旧的族(例如genetlink控制族)试图通过重用属性类型来定义数组类型来携带信息。
+<p>New Netlink families should use <code class="docutils literal notranslate"><span class="pre">multi-attr</span></code> to define arrays.
+Older families (e.g. <code class="docutils literal notranslate"><span class="pre">genetlink</span></code> control family) attempted to
+define array types reusing attribute type to carry information.</p>
+中文：作为参考，多元属性数组可能如下所示：
+<p>For reference the <code class="docutils literal notranslate"><span class="pre">multi-attr</span></code> array may look like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[ARRAY-ATTR]
+  [INDEX (optionally)]
+  [MEMBER1]
+  [MEMBER2]
+[SOME-OTHER-ATTR]
+[ARRAY-ATTR]
+  [INDEX (optionally)]
+  [MEMBER1]
+  [MEMBER2]
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">ARRAY-ATTR</span></code> is the array entry type.</p>
+<section id="array-nest">
+<h4>array-nest<a class="headerlink" href="#array-nest" title="Permalink to this heading">¶</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">array-nest</span></code> creates the following structure:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[SOME-OTHER-ATTR]
+[ARRAY-ATTR]
+  [ENTRY]
+    [MEMBER1]
+    [MEMBER2]
+  [ENTRY]
+    [MEMBER1]
+    [MEMBER2]
+</pre></div>
+</div>
+中文：它将整个数组包装在额外的属性中（因此限制其大小为64kB）。ENTRY嵌套是特殊的，并且它们的类型是条目的索引，而不是常规属性类型。
+<p>It wraps the entire array in an extra attribute (hence limiting its size
+to 64kB). The <code class="docutils literal notranslate"><span class="pre">ENTRY</span></code> nests are special and have the index of the entry
+as their type instead of normal attribute type.</p>
+</section>
+<section id="type-value">
+<h4>type-value<a class="headerlink" href="#type-value" title="Permalink to this heading">¶</a></h4>
+中文：type-value是一种构造，它使用属性类型来携带关于单个对象的信息（通常在逐个条目转储数组时使用）。
+<p><code class="docutils literal notranslate"><span class="pre">type-value</span></code> is a construct which uses attribute types to carry
+information about a single object (often used when array is dumped
+entry-by-entry).</p>
+中文：类型值可以有多个层次的嵌套，例如 genetlink 的策略转储会创建以下结构:
+<p><code class="docutils literal notranslate"><span class="pre">type-value</span></code> can have multiple levels of nesting, for example
+genetlink’s policy dumps create the following structures:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[POLICY-IDX]
+  [ATTR-IDX]
+    [POLICY-INFO-ATTR1]
+    [POLICY-INFO-ATTR2]
+</pre></div>
+</div>
+中文：第一层嵌套的策略索引作为其属性类型，它包含一个单独的嵌套，该嵌套具有索引属性作为其类型。在attr-index嵌套中是策略属性。现代Netlink族应该将其定义为扁平结构，这里的嵌套没有任何好处。
+<p>Where the first level of nest has the policy index as it’s attribute
+type, it contains a single nest which has the attribute index as its
+type. Inside the attr-index nest are the policy attributes. Modern
+Netlink families should have instead defined this as a flat structure,
+the nesting serves no good purpose here.</p>
+</section>
+</section>
+</section>
+<section id="operations">
+<h2>Operations<a class="headerlink" href="#operations" title="Permalink to this heading">¶</a></h2>
+<section id="enum-message-id-model">
+<h3>Enum (message ID) model<a class="headerlink" href="#enum-message-id-model" title="Permalink to this heading">¶</a></h3>
+<section id="unified">
+<h4>unified<a class="headerlink" href="#unified" title="Permalink to this heading">¶</a></h4>
+中文：现代家庭使用统一的消息ID模型，该模型对家庭内的所有消息使用单一枚举。请求和响应共享相同的消息ID。通知从相同的空间中具有单独的ID。例如，给定以下操作列表：
+<p>Modern families use the <code class="docutils literal notranslate"><span class="pre">unified</span></code> message ID model, which uses
+a single enumeration for all messages within family. Requests and
+responses share the same message ID. Notifications have separate
+IDs from the same space. For example given the following list
+of operations:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a</span><span class="w"></span>
+<span class="w">  </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">  </span><span class="nt">do</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b</span><span class="w"></span>
+<span class="w">  </span><span class="nt">do</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">c</span><span class="w"></span>
+<span class="w">  </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span><span class="w"></span>
+<span class="w">  </span><span class="nt">notify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">d</span><span class="w"></span>
+<span class="w">  </span><span class="nt">do</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+</pre></div>
+</div>
+中文：针对操作a的请求和响应将具有ID为1，操作b的请求和响应将具有ID为2（因为没有明确的值，它是前一个操作+1）。通知c将使用ID为4，操作d为5等等。
+<p>Requests and responses for operation <code class="docutils literal notranslate"><span class="pre">a</span></code> will have the ID of 1,
+the requests and responses of <code class="docutils literal notranslate"><span class="pre">b</span></code> - 2 (since there is no explicit
+<code class="docutils literal notranslate"><span class="pre">value</span></code> it’s previous operation <code class="docutils literal notranslate"><span class="pre">+</span> <span class="pre">1</span></code>). Notification <code class="docutils literal notranslate"><span class="pre">c</span></code> will
+use the ID of 4, operation <code class="docutils literal notranslate"><span class="pre">d</span></code> 5 etc.</p>
+</section>
+<section id="directional">
+<h4>directional<a class="headerlink" href="#directional" title="Permalink to this heading">¶</a></h4>
+中文：方向性模型将ID分配根据消息的方向进行划分。来自内核的消息与内核的消息不会混淆，这样可以节省ID空间（但编程更繁琐）。
+<p>The <code class="docutils literal notranslate"><span class="pre">directional</span></code> model splits the ID assignment by the direction of
+the message. Messages from and to the kernel can’t be confused with
+each other so this conserves the ID space (at the cost of making
+the programming more cumbersome).</p>
+中文：在这种情况下，value属性应该在操作的请求回复部分中指定（如果一个操作同时有do和dump，则ID是共享的，value应该在do中设置）。对于通知，value是在操作级别提供的，但它只分配一个回复（即“from-kernel” ID）。让我们看一个例子：
+<p>In this case <code class="docutils literal notranslate"><span class="pre">value</span></code> attribute should be specified in the <code class="docutils literal notranslate"><span class="pre">request</span></code>
+<code class="docutils literal notranslate"><span class="pre">reply</span></code> sections of the operations (if an operation has both <code class="docutils literal notranslate"><span class="pre">do</span></code>
+and <code class="docutils literal notranslate"><span class="pre">dump</span></code> the IDs are shared, <code class="docutils literal notranslate"><span class="pre">value</span></code> should be set in <code class="docutils literal notranslate"><span class="pre">do</span></code>).
+For notifications the <code class="docutils literal notranslate"><span class="pre">value</span></code> is provided at the op level but it
+only allocates a <code class="docutils literal notranslate"><span class="pre">reply</span></code> (i.e. a “from-kernel” ID). Let’s look
+at an example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a</span><span class="w"></span>
+<span class="w">  </span><span class="nt">do</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">request</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
+<span class="w">      </span><span class="nt">attributes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="w">    </span><span class="nt">reply</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">      </span><span class="nt">attributes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b</span><span class="w"></span>
+<span class="w">  </span><span class="nt">notify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">c</span><span class="w"></span>
+<span class="w">  </span><span class="nt">notify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a</span><span class="w"></span>
+<span class="w">  </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"></span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">d</span><span class="w"></span>
+<span class="w">  </span><span class="nt">do</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
+</pre></div>
+</div>
+中文：在这种情况下，当向内核发送消息时，a会使用2，并期望收到ID为1的响应消息。通知b分配了一个“from-kernel” ID，即2。c分配了一个“from-kernel” ID为7。如果操作d在规范中没有显式设置值，那么请求部分将分配3（a是上一个具有请求部分和值为2的操作），响应部分将分配8（c是上一个“from-kernel”方向上的操作）。
+<p>In this case <code class="docutils literal notranslate"><span class="pre">a</span></code> will use 2 when sending the message to the kernel
+and expects message with ID 1 in response. Notification <code class="docutils literal notranslate"><span class="pre">b</span></code> allocates
+a “from-kernel” ID which is 2. <code class="docutils literal notranslate"><span class="pre">c</span></code> allocates “from-kernel” ID of 7.
+If operation <code class="docutils literal notranslate"><span class="pre">d</span></code> does not set <code class="docutils literal notranslate"><span class="pre">values</span></code> explicitly in the spec
+it will be allocated 3 for the request (<code class="docutils literal notranslate"><span class="pre">a</span></code> is the previous operation
+with a request section and the value of 2) and 8 for response (<code class="docutils literal notranslate"><span class="pre">c</span></code> is
+the previous operation in the “from-kernel” direction).</p>
+</section>
+</section>
+</section>
+<section id="other-quirks-todo">
+<h2>Other quirks (todo)<a class="headerlink" href="#other-quirks-todo" title="Permalink to this heading">¶</a></h2>
+<section id="structures">
+<h3>Structures<a class="headerlink" href="#structures" title="Permalink to this heading">¶</a></h3>
+中文：传统家族可以定义C结构，既可以用作属性的内容，也可以用作固定的消息头。计划是在定义中定义这些结构并链接相应的属性。
+<p>Legacy families can define C structures both to be used as the contents
+of an attribute and as a fixed message header. The plan is to define
+the structs in <code class="docutils literal notranslate"><span class="pre">definitions</span></code> and link the appropriate attrs.</p>
+</section>
+<section id="multi-message-do">
+<h3>Multi-message DO<a class="headerlink" href="#multi-message-do" title="Permalink to this heading">¶</a></h3>
+中文：新的Netlink家族不应该以设置了NLM_F_MULTI的多个回复响应DO操作。而应该使用过滤器转储。
+<p>New Netlink families should never respond to a DO operation with multiple
+replies, with <code class="docutils literal notranslate"><span class="pre">NLM_F_MULTI</span></code> set. Use a filtered dump instead.</p>
+中文：在规范级别上，我们可以为do定义一个dumps属性，具体取决于解析的实现方式（解析为单个回复或对象列表，即基本上是一个转储），可能的取值为combine和multi-object。
+<p>At the spec level we can define a <code class="docutils literal notranslate"><span class="pre">dumps</span></code> property for the <code class="docutils literal notranslate"><span class="pre">do</span></code>,
+perhaps with values of <code class="docutils literal notranslate"><span class="pre">combine</span></code> and <code class="docutils literal notranslate"><span class="pre">multi-object</span></code> depending
+on how the parsing should be implemented (parse into a single reply
+vs list of objects i.e. pretty much a dump).</p>
+</section>
+</section>
+</section>
+</div>
+</div>
+</div>
+<div class="clearer"></div>
+</div>
+<div class="footer">
+      ©The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/userspace-api/netlink/genetlink-legacy.rst.txt" rel="nofollow">Page source</a>
+</div>
+</body>
+</html>

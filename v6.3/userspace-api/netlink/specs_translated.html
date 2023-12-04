@@ -1,0 +1,603 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.17: http://docutils.sourceforge.net/" name="generator"/>
+<title>Netlink protocol specifications (in YAML) — The Linux Kernel  documentation</title>
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/alabaster.css" rel="stylesheet" type="text/css"/>
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script>
+<script src="../../_static/underscore.js"></script>
+<script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../../_static/doctools.js"></script>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="c-code-gen.html" rel="next" title="Netlink spec C code generation"/>
+<link href="intro-specs.html" rel="prev" title="Using Netlink protocol specifications"/>
+<link href="../../_static/custom.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=0.9, maximum-scale=0.9" name="viewport"/>
+</head><body>
+<div class="document">
+<div aria-label="main navigation" class="sphinxsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">The Linux Kernel</a></h1>
+<p class="blurb">6.3.0</p>
+<div id="searchbox" role="search" style="display: none">
+<h3 id="searchlabel">Quick search</h3>
+<div class="searchformwrapper">
+<form action="../../search.html" class="search" method="get">
+<input aria-labelledby="searchlabel" autocapitalize="off" autocomplete="off" autocorrect="off" name="q" spellcheck="false" type="text"/>
+<input type="submit" value="Go"/>
+</form>
+</div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script><!-- SPDX-License-Identifier: GPL-2.0 -->
+<p>
+<h3 class="kernel-toc-contents">Contents</h3>
+<input checked="" class="kernel-toc-toggle" id="kernel-toc-toggle" type="checkbox"/>
+<label class="kernel-toc-title" for="kernel-toc-toggle"></label>
+<div class="kerneltoc" id="kerneltoc">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../process/development-process.html">A guide to the Kernel Development Process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../process/submitting-patches.html">Submitting patches: the essential guide to getting your code into the kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../process/code-of-conduct.html">Code of conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../maintainer/index.html">Kernel Maintainer Handbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../process/index.html">All development-process docs</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../core-api/index.html">Core API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../driver-api/index.html">Driver implementer’s API guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../subsystem-apis.html">Kernel subsystem documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../locking/index.html">Locking in the kernel</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../process/license-rules.html">Linux kernel licensing rules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../doc-guide/index.html">How to write kernel documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev-tools/index.html">Development tools for the kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev-tools/testing-overview.html">Kernel Testing Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel-hacking/index.html">Kernel Hacking Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../trace/index.html">Linux Tracing Technologies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fault-injection/index.html">fault-injection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../livepatch/index.html">Kernel Livepatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rust/index.html">Rust</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../admin-guide/index.html">The Linux kernel user’s and administrator’s guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kbuild/index.html">The kernel build system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../admin-guide/reporting-issues.html">Reporting issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tools/index.html">User-space tools</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">The Linux kernel user-space API guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../no_new_privs.html">No New Privileges Flag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../seccomp_filter.html">Seccomp BPF (SECure COMPuting with filters)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../landlock.html">Landlock: unprivileged access control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unshare.html">unshare system call</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../spec_ctrl.html">Speculation Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../accelerators/ocxl.html">OpenCAPI (Open Coherent Accelerator Processor Interface)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ebpf/index.html">eBPF Userspace API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ioctl/index.html">IOCTLs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iommu.html">IOMMU Userspace API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iommufd.html">IOMMUFD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../media/index.html">Linux Media Infrastructure userspace API</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Netlink Handbook</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="intro.html">Introduction to Netlink</a></li>
+<li class="toctree-l3"><a class="reference internal" href="intro-specs.html">Using Netlink protocol specifications</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Netlink protocol specifications (in YAML)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c-code-gen.html">Netlink spec C code generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="genetlink-legacy.html">Netlink specification support for legacy Generic Netlink families</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../sysfs-platform_profile.html">Platform Profile Selection (e.g. /sys/firmware/acpi/platform_profile)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vduse.html">VDUSE - “vDPA Device in Userspace”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../futex2.html">futex2</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../firmware-guide/index.html">The Linux kernel firmware guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../devicetree/index.html">Open Firmware and Devicetree</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../arch.html">CPU Architectures</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../staging/index.html">Unsorted Documentation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../translations/index.html">Translations</a></li>
+</ul>
+</div>
+<script type="text/javascript"> <!--
+  var sbar = document.getElementsByClassName("sphinxsidebar")[0];
+  let currents = document.getElementsByClassName("current")
+  sbar.scrollTop = currents[currents.length - 1].offsetTop;
+  --> </script>
+<div aria-label="source link" role="note">
+<h3>This Page</h3>
+<ul class="this-page-menu">
+<li><a href="../../_sources/userspace-api/netlink/specs.rst.txt" rel="nofollow">Show Source</a></li>
+</ul>
+</div>
+</p></div>
+</div>
+<div class="documentwrapper">
+<div class="bodywrapper">
+<div class="body" role="main">
+<section id="netlink-protocol-specifications-in-yaml">
+<h1>Netlink protocol specifications (in YAML)<a class="headerlink" href="#netlink-protocol-specifications-in-yaml" title="Permalink to this heading">¶</a></h1>
+中文：Netlink协议规范是用YAML编写的Netlink协议的完整可读描述。规范的目标是允许将Netlink解析与用户空间逻辑分离，并减少每个新族、命令、属性的手写Netlink代码的量。Netlink规范应该是完整的，不依赖于任何其他规范或C头文件，这样就可以在不能直接包含内核头文件的语言中轻松使用。
+<p>Netlink protocol specifications are complete, machine readable descriptions of
+Netlink protocols written in YAML. The goal of the specifications is to allow
+separating Netlink parsing from user space logic and minimize the amount of
+hand written Netlink code for each new family, command, attribute.
+Netlink specs should be complete and not depend on any other spec
+or C header file, making it easy to use in languages which can’t include
+kernel headers directly.</p>
+中文：内核内部使用YAML规范来生成：
+<p>Internally kernel uses the YAML specs to generate:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the C uAPI header</p></li>
+<li>中文：ReST文件的协议文档
+<p>documentation of the protocol as a ReST file</p></li>
+<li><p>policy tables for input attribute validation</p></li>
+<li><p>operation tables</p></li>
+</ul>
+</div></blockquote>
+<p>YAML specifications can be found under <code class="docutils literal notranslate"><span class="pre">Documentation/netlink/specs/</span></code></p>
+中文：本文档描述了模式的细节。
+请参阅《使用Netlink协议规范》以获得实践起始指南。
+<p>This document describes details of the schema.
+See <a class="reference internal" href="intro-specs.html"><span class="doc">Using Netlink protocol specifications</span></a> for a practical starting guide.</p>
+中文：所有规格必须在 ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) 下进行许可，以便在用户空间代码中方便地使用。
+<p>All specs must be licensed under
+<code class="docutils literal notranslate"><span class="pre">((GPL-2.0</span> <span class="pre">WITH</span> <span class="pre">Linux-syscall-note)</span> <span class="pre">OR</span> <span class="pre">BSD-3-Clause)</span></code>
+to allow for easy adoption in user space code.</p>
+<section id="compatibility-levels">
+<h2>Compatibility levels<a class="headerlink" href="#compatibility-levels" title="Permalink to this heading">¶</a></h2>
+中文：Netlink规范有四个模式级别，从最简单的应用于新家族到最复杂的覆盖了旧家族的所有特殊情况。每个下一个级别都继承了上一个级别的属性，也就是说，能够解析更复杂的genetlink模式的用户也与更简单的模式兼容。这些级别分别是：
+<p>There are four schema levels for Netlink specs, from the simplest used
+by new families to the most complex covering all the quirks of the old ones.
+Each next level inherits the attributes of the previous level, meaning that
+user capable of parsing more complex <code class="docutils literal notranslate"><span class="pre">genetlink</span></code> schemas is also compatible
+with simpler ones. The levels are:</p>
+<blockquote>
+<div><ul class="simple">
+<li>中文：genetlink - 最简化的，应该被所有新创建的族群使用
+<p><code class="docutils literal notranslate"><span class="pre">genetlink</span></code> - most streamlined, should be used by all new families</p></li>
+<li>中文：genetlink-c - genetlink 的超集，增加了额外的属性，允许自定义 define 和 enum 类型和值的名称；对于所有不直接与 C uAPI 头文件交互的实现，此模式应当等同于 genetlink。
+<p><code class="docutils literal notranslate"><span class="pre">genetlink-c</span></code> - superset of <code class="docutils literal notranslate"><span class="pre">genetlink</span></code> with extra attributes allowing
+customization of define and enum type and value names; this schema should
+be equivalent to <code class="docutils literal notranslate"><span class="pre">genetlink</span></code> for all implementations which don’t interact
+directly with C uAPI headers</p></li>
+<li>中文：genetlink-legacy - 通用Netlink捕捉所有旧genetlink族群的模式，支持奇怪的属性格式，二进制结构等。
+<p><code class="docutils literal notranslate"><span class="pre">genetlink-legacy</span></code> - Generic Netlink catch all schema supporting quirks of
+all old genetlink families, strange attribute formats, binary structures etc.</p></li>
+<li>中文：netlink-raw - 支持所有以前的通用 Netlink 协议的捕获架构，如 NETLINK_ROUTE。
+<p><code class="docutils literal notranslate"><span class="pre">netlink-raw</span></code> - catch all schema supporting pre-Generic Netlink protocols
+such as <code class="docutils literal notranslate"><span class="pre">NETLINK_ROUTE</span></code></p></li>
+</ul>
+</div></blockquote>
+中文：schemas（在jsonschema中的定义）可以在Documentation/netlink/下找到。
+<p>The definition of the schemas (in <code class="docutils literal notranslate"><span class="pre">jsonschema</span></code>) can be found
+under <code class="docutils literal notranslate"><span class="pre">Documentation/netlink/</span></code>.</p>
+</section>
+<section id="schema-structure">
+<h2>Schema structure<a class="headerlink" href="#schema-structure" title="Permalink to this heading">¶</a></h2>
+<p>YAML schema has the following conceptual sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>globals</p></li>
+<li><p>definitions</p></li>
+<li><p>attributes</p></li>
+<li><p>operations</p></li>
+<li><p>multicast groups</p></li>
+</ul>
+</div></blockquote>
+中文：模式中的大多数属性接受（实际上需要）一个文档子属性来说明定义的对象。
+<p>Most properties in the schema accept (or in fact require) a <code class="docutils literal notranslate"><span class="pre">doc</span></code>
+sub-property documenting the defined object.</p>
+中文：下面的部分描述了最现代的genetlink模式的属性。有关如何从名称属性派生C名称的信息，请参阅genetlink-c的文档。
+<p>The following sections describe the properties of the most modern <code class="docutils literal notranslate"><span class="pre">genetlink</span></code>
+schema. See the documentation of <a class="reference internal" href="c-code-gen.html"><span class="doc">genetlink-c</span></a>
+for information on how C names are derived from name properties.</p>
+</section>
+<section id="genetlink">
+<h2>genetlink<a class="headerlink" href="#genetlink" title="Permalink to this heading">¶</a></h2>
+<section id="globals">
+<h3>Globals<a class="headerlink" href="#globals" title="Permalink to this heading">¶</a></h3>
+中文：在规范文件的根级别直接列出的属性。
+<p>Attributes listed directly at the root level of the spec file.</p>
+<section id="name">
+<h4>name<a class="headerlink" href="#name" title="Permalink to this heading">¶</a></h4>
+中文：家庭名称。名称以独特的方式识别家庭，因为家庭ID是动态分配的。
+<p>Name of the family. Name identifies the family in a unique way, since
+the Family IDs are allocated dynamically.</p>
+</section>
+<section id="version">
+<h4>version<a class="headerlink" href="#version" title="Permalink to this heading">¶</a></h4>
+<p>Generic Netlink family version, default is 1.</p>
+</section>
+<section id="protocol">
+<h4>protocol<a class="headerlink" href="#protocol" title="Permalink to this heading">¶</a></h4>
+中文：架构级别，默认为genetlink，对于新的genetlink族只允许使用这个值。
+<p>The schema level, default is <code class="docutils literal notranslate"><span class="pre">genetlink</span></code>, which is the only value
+allowed for new <code class="docutils literal notranslate"><span class="pre">genetlink</span></code> families.</p>
+</section>
+</section>
+<section id="definitions">
+<h3>definitions<a class="headerlink" href="#definitions" title="Permalink to this heading">¶</a></h3>
+<p>Array of type and constant definitions.</p>
+<section id="id1">
+<h4>name<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h4>
+<p>Name of the type / constant.</p>
+</section>
+<section id="type">
+<h4>type<a class="headerlink" href="#type" title="Permalink to this heading">¶</a></h4>
+<p>One of the following types:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>const - a single, standalone constant</p></li>
+<li>中文：枚举 - 定义一个整数枚举，为每个条目递增1个值（例如0、1、2、3）
+<p>enum - defines an integer enumeration, with values for each entry
+incrementing by 1, (e.g. 0, 1, 2, 3)</p></li>
+<li>中文：flags - 定义了一个整数枚举，为每个条目占据一个位，从第 0 位开始，（例如，1、2、4、8）
+<p>flags - defines an integer enumeration, with values for each entry
+occupying a bit, starting from bit 0, (e.g. 1, 2, 4, 8)</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="value">
+<h4>value<a class="headerlink" href="#value" title="Permalink to this heading">¶</a></h4>
+<p>The value for the <code class="docutils literal notranslate"><span class="pre">const</span></code>.</p>
+</section>
+<section id="value-start">
+<h4>value-start<a class="headerlink" href="#value-start" title="Permalink to this heading">¶</a></h4>
+中文：对于枚举（enum）和标志（flags），第一个值允许覆盖默认的起始值0（对于枚举）和起始位（对于标志）。
+对于标志的值起始（value-start）选择的是起始位，而不是移位后的值。
+<p>The first value for <code class="docutils literal notranslate"><span class="pre">enum</span></code> and <code class="docutils literal notranslate"><span class="pre">flags</span></code>, allows overriding the default
+start value of <code class="docutils literal notranslate"><span class="pre">0</span></code> (for <code class="docutils literal notranslate"><span class="pre">enum</span></code>) and starting bit (for <code class="docutils literal notranslate"><span class="pre">flags</span></code>).
+For <code class="docutils literal notranslate"><span class="pre">flags</span></code> <code class="docutils literal notranslate"><span class="pre">value-start</span></code> selects the starting bit, not the shifted value.</p>
+<p>Sparse enumerations are not supported.</p>
+</section>
+<section id="entries">
+<h4>entries<a class="headerlink" href="#entries" title="Permalink to this heading">¶</a></h4>
+中文：枚举和标志的条目名称数组。
+<p>Array of names of the entries for <code class="docutils literal notranslate"><span class="pre">enum</span></code> and <code class="docutils literal notranslate"><span class="pre">flags</span></code>.</p>
+</section>
+<section id="header">
+<h4>header<a class="headerlink" href="#header" title="Permalink to this heading">¶</a></h4>
+中文：对于与C兼容的语言，已经定义了这个值的头文件。
+如果该定义被多个系列共享（例如IFNAMSIZ），
+C兼容语言的代码生成器可能倾向于添加适当的包含项
+而不是重复定义。
+<p>For C-compatible languages, header which already defines this value.
+In case the definition is shared by multiple families (e.g. <code class="docutils literal notranslate"><span class="pre">IFNAMSIZ</span></code>)
+code generators for C-compatible languages may prefer to add an appropriate
+include instead of rendering a new definition.</p>
+</section>
+</section>
+<section id="attribute-sets">
+<h3>attribute-sets<a class="headerlink" href="#attribute-sets" title="Permalink to this heading">¶</a></h3>
+中文：该属性包含有关家族的netlink属性的信息。
+所有家族至少具有一个属性集，大多数家族具有多个属性集。
+属性集是一个数组，每个条目描述一个单独的集合。
+<p>This property contains information about netlink attributes of the family.
+All families have at least one attribute set, most have multiple.
+<code class="docutils literal notranslate"><span class="pre">attribute-sets</span></code> is an array, with each entry describing a single set.</p>
+中文：请注意，规范是“扁平化”的，不打算在视觉上类似于netlink消息的格式（与内核注释中的某些临时文档格式不同）。在规范中，下级属性集不是内联定义为一个嵌套，而是在一个单独的属性集中定义，并通过容器的nested-attributes属性引用。
+<p>Note that the spec is “flattened” and is not meant to visually resemble
+the format of the netlink messages (unlike certain ad-hoc documentation
+formats seen in kernel comments). In the spec subordinate attribute sets
+are not defined inline as a nest, but defined in a separate attribute set
+referred to with a <code class="docutils literal notranslate"><span class="pre">nested-attributes</span></code> property of the container.</p>
+中文：规范也可以包含分数集合，即包含子集属性的集合。这样的集合描述了一个完整集合的一部分，允许缩小嵌套中所允许的属性范围，或者细化验证标准。分数集合只能在嵌套中使用，不以任何方式呈现给uAPI。
+<p>Spec may also contain fractional sets - sets which contain a <code class="docutils literal notranslate"><span class="pre">subset-of</span></code>
+property. Such sets describe a section of a full set, allowing narrowing down
+which attributes are allowed in a nest or refining the validation criteria.
+Fractional sets can only be used in nests. They are not rendered to the uAPI
+in any fashion.</p>
+<section id="id2">
+<h4>name<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h4>
+中文：唯一标识属性集、操作和嵌套属性，通过名称引用集合。
+<p>Uniquely identifies the attribute set, operations and nested attributes
+refer to the sets by the <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+</section>
+<section id="subset-of">
+<h4>subset-of<a class="headerlink" href="#subset-of" title="Permalink to this heading">¶</a></h4>
+中文：重新定义另一个集合的一部分（分数集）。
+允许缩小字段范围并改变验证标准，
+甚至根据嵌套的层次结构更改属性类型。
+分数集中每个属性的值隐含与主集合相同。
+<p>Re-defines a portion of another set (a fractional set).
+Allows narrowing down fields and changing validation criteria
+or even types of attributes depending on the nest in which they
+are contained. The <code class="docutils literal notranslate"><span class="pre">value</span></code> of each attribute in the fractional
+set is implicitly the same as in the main set.</p>
+</section>
+<section id="attributes">
+<h4>attributes<a class="headerlink" href="#attributes" title="Permalink to this heading">¶</a></h4>
+<p>List of attributes in the set.</p>
+</section>
+</section>
+<section id="attribute-properties">
+<h3>Attribute properties<a class="headerlink" href="#attribute-properties" title="Permalink to this heading">¶</a></h3>
+<section id="id3">
+<h4>name<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h4>
+<p>Identifies the attribute, unique within the set.</p>
+</section>
+<section id="id4">
+<h4>type<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h4>
+<p>Netlink attribute type, see <a class="reference internal" href="#attr-types"><span class="std std-ref">Attribute types</span></a>.</p>
+</section>
+<section id="assign-val">
+<span id="id5"></span><h4>value<a class="headerlink" href="#assign-val" title="Permalink to this heading">¶</a></h4>
+中文：数字属性ID，在串行化 Netlink 消息中使用。
+如果可以跳过值属性，则属性 ID 将是前一个属性的值加一 (递归)
+以及属性集中第一个属性为 1。
+<p>Numerical attribute ID, used in serialized Netlink messages.
+The <code class="docutils literal notranslate"><span class="pre">value</span></code> property can be skipped, in which case the attribute ID
+will be the value of the previous attribute plus one (recursively)
+and <code class="docutils literal notranslate"><span class="pre">1</span></code> for the first attribute in the attribute set.</p>
+中文：属性（和操作）的首个条目默认值为1（与定义中的枚举从0开始不同），因为条目0几乎总是保留为未定义。如果需要，规范可以明确地将值设置为0。
+<p>Attributes (and operations) use <code class="docutils literal notranslate"><span class="pre">1</span></code> as the default value for the first
+entry (unlike enums in definitions which start from <code class="docutils literal notranslate"><span class="pre">0</span></code>) because
+entry <code class="docutils literal notranslate"><span class="pre">0</span></code> is almost always reserved as undefined. Spec can explicitly
+set value to <code class="docutils literal notranslate"><span class="pre">0</span></code> if needed.</p>
+中文：请注意，属性的值仅在其主要集合中定义（而不在子集中）。
+<p>Note that the <code class="docutils literal notranslate"><span class="pre">value</span></code> of an attribute is defined only in its main set
+(not in subsets).</p>
+</section>
+<section id="enum">
+<h4>enum<a class="headerlink" href="#enum" title="Permalink to this heading">¶</a></h4>
+中文：对于整数类型，指定属性中的值属于枚举或来自定义部分的标志。
+<p>For integer types specifies that values in the attribute belong
+to an <code class="docutils literal notranslate"><span class="pre">enum</span></code> or <code class="docutils literal notranslate"><span class="pre">flags</span></code> from the <code class="docutils literal notranslate"><span class="pre">definitions</span></code> section.</p>
+</section>
+<section id="enum-as-flags">
+<h4>enum-as-flags<a class="headerlink" href="#enum-as-flags" title="Permalink to this heading">¶</a></h4>
+中文：无论其类型如何，在定义中将enum视为flags处理。
+当既需要enum形式又需要flags形式时，定义应包含一个enum和需要flags形式的属性应使用此属性。
+<p>Treat <code class="docutils literal notranslate"><span class="pre">enum</span></code> as <code class="docutils literal notranslate"><span class="pre">flags</span></code> regardless of its type in <code class="docutils literal notranslate"><span class="pre">definitions</span></code>.
+When both <code class="docutils literal notranslate"><span class="pre">enum</span></code> and <code class="docutils literal notranslate"><span class="pre">flags</span></code> forms are needed <code class="docutils literal notranslate"><span class="pre">definitions</span></code> should
+contain an <code class="docutils literal notranslate"><span class="pre">enum</span></code> and attributes which need the <code class="docutils literal notranslate"><span class="pre">flags</span></code> form should
+use this attribute.</p>
+</section>
+<section id="nested-attributes">
+<h4>nested-attributes<a class="headerlink" href="#nested-attributes" title="Permalink to this heading">¶</a></h4>
+中文：标识给定属性内部嵌套属性的属性空间。
+仅适用于可能具有子属性的复杂属性。
+<p>Identifies the attribute space for attributes nested within given attribute.
+Only valid for complex attributes which may have sub-attributes.</p>
+</section>
+<section id="multi-attr-arrays">
+<h4>multi-attr (arrays)<a class="headerlink" href="#multi-attr-arrays" title="Permalink to this heading">¶</a></h4>
+中文：布尔属性，表示该属性可以出现多次。
+允许属性重复是实现数组的推荐方法（没有额外嵌套）。
+<p>Boolean property signifying that the attribute may be present multiple times.
+Allowing an attribute to repeat is the recommended way of implementing arrays
+(no extra nesting).</p>
+</section>
+<section id="byte-order">
+<h4>byte-order<a class="headerlink" href="#byte-order" title="Permalink to this heading">¶</a></h4>
+中文：对于整数类型，指定属性字节顺序 - 小端或大端。
+<p>For integer types specifies attribute byte order - <code class="docutils literal notranslate"><span class="pre">little-endian</span></code>
+or <code class="docutils literal notranslate"><span class="pre">big-endian</span></code>.</p>
+</section>
+<section id="checks">
+<h4>checks<a class="headerlink" href="#checks" title="Permalink to this heading">¶</a></h4>
+中文：内核使用的输入验证约束。用户空间应使用通用 Netlink 检查来查询运行内核的策略，而不是依赖于规范文件中指定的内容。
+<p>Input validation constraints used by the kernel. User space should query
+the policy of the running kernel using Generic Netlink introspection,
+rather than depend on what is specified in the spec file.</p>
+中文：内核中的验证策略由类型定义（类型和嵌套属性）和检查组成。
+<p>The validation policy in the kernel is formed by combining the type
+definition (<code class="docutils literal notranslate"><span class="pre">type</span></code> and <code class="docutils literal notranslate"><span class="pre">nested-attributes</span></code>) and the <code class="docutils literal notranslate"><span class="pre">checks</span></code>.</p>
+</section>
+</section>
+<section id="operations">
+<h3>operations<a class="headerlink" href="#operations" title="Permalink to this heading">¶</a></h3>
+中文：本节介绍内核与用户空间之间传递的消息。
+本节有三种类型的条目 - 操作、通知和事件。
+<p>This section describes messages passed between the kernel and the user space.
+There are three types of entries in this section - operations, notifications
+and events.</p>
+中文：操作描述了最常见的请求-响应通信。用户发送请求，内核回复。每个操作可能包含对netlink用户熟悉的两种模式的任意组合 - do和dump。
+do和dump又包含了请求和响应属性的组合。如果在给定的方向上没有传递带有属性的显式消息（例如不接受过滤器的dump，或内核仅响应具有netlink错误代码的SET操作的do），则可以跳过请求或响应部分。
+请求和响应部分列出了消息中允许的属性。列表只包含由属性集属性引用的属性名称。
+<p>Operations describe the most common request - response communication. User
+sends a request and kernel replies. Each operation may contain any combination
+of the two modes familiar to netlink users - <code class="docutils literal notranslate"><span class="pre">do</span></code> and <code class="docutils literal notranslate"><span class="pre">dump</span></code>.
+<code class="docutils literal notranslate"><span class="pre">do</span></code> and <code class="docutils literal notranslate"><span class="pre">dump</span></code> in turn contain a combination of <code class="docutils literal notranslate"><span class="pre">request</span></code> and
+<code class="docutils literal notranslate"><span class="pre">response</span></code> properties. If no explicit message with attributes is passed
+in a given direction (e.g. a <code class="docutils literal notranslate"><span class="pre">dump</span></code> which does not accept filter, or a <code class="docutils literal notranslate"><span class="pre">do</span></code>
+of a SET operation to which the kernel responds with just the netlink error
+code) <code class="docutils literal notranslate"><span class="pre">request</span></code> or <code class="docutils literal notranslate"><span class="pre">response</span></code> section can be skipped.
+<code class="docutils literal notranslate"><span class="pre">request</span></code> and <code class="docutils literal notranslate"><span class="pre">response</span></code> sections list the attributes allowed in a message.
+The list contains only the names of attributes from a set referred
+to by the <code class="docutils literal notranslate"><span class="pre">attribute-set</span></code> property.</p>
+中文：通知和事件都是内核发送给多播组成员的异步消息。两者的区别在于通知与GET操作共享其内容（GET操作的名称在notify属性中指定）。这种安排通常用于关于对象的通知，其中通知携带完整的对象定义。
+<p>Notifications and events both refer to the asynchronous messages sent by
+the kernel to members of a multicast group. The difference between the
+two is that a notification shares its contents with a GET operation
+(the name of the GET operation is specified in the <code class="docutils literal notranslate"><span class="pre">notify</span></code> property).
+This arrangement is commonly used for notifications about
+objects where the notification carries the full object definition.</p>
+中文：事件更加专注，只携带了部分信息而非完整对象状态（一个虚构的例子是仅有接口名称和新链接状态的链接状态改变事件）。事件包含事件属性。对于netlink而言，事件被认为不太习惯，应该优先考虑通知。
+<p>Events are more focused and carry only a subset of information rather than full
+object state (a made up example would be a link state change event with just
+the interface name and the new link state). Events contain the <code class="docutils literal notranslate"><span class="pre">event</span></code>
+property. Events are considered less idiomatic for netlink and notifications
+should be preferred.</p>
+<section id="list">
+<h4>list<a class="headerlink" href="#list" title="Permalink to this heading">¶</a></h4>
+中文：genetlink的唯一属性是操作列表，包括操作、通知等。
+<p>The only property of <code class="docutils literal notranslate"><span class="pre">operations</span></code> for <code class="docutils literal notranslate"><span class="pre">genetlink</span></code>, holds the list of
+operations, notifications etc.</p>
+</section>
+</section>
+<section id="operation-properties">
+<h3>Operation properties<a class="headerlink" href="#operation-properties" title="Permalink to this heading">¶</a></h3>
+<section id="id6">
+<h4>name<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h4>
+<p>Identifies the operation.</p>
+</section>
+<section id="id7">
+<h4>value<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h4>
+中文：用于序列化Netlink消息的数字消息ID。
+适用于属性值的相同枚举规则被应用。
+<p>Numerical message ID, used in serialized Netlink messages.
+The same enumeration rules are applied as to
+<a class="reference internal" href="#assign-val"><span class="std std-ref">attribute values</span></a>.</p>
+</section>
+<section id="attribute-set">
+<h4>attribute-set<a class="headerlink" href="#attribute-set" title="Permalink to this heading">¶</a></h4>
+中文：指定包含在消息中的属性集合。
+<p>Specifies the attribute set contained within the message.</p>
+</section>
+<section id="do">
+<h4>do<a class="headerlink" href="#do" title="Permalink to this heading">¶</a></h4>
+中文：doit 请求的规范。应包含请求、回复或这两个属性，每个属性都包含一个 Message 属性列表。
+<p>Specification for the <code class="docutils literal notranslate"><span class="pre">doit</span></code> request. Should contain <code class="docutils literal notranslate"><span class="pre">request</span></code>, <code class="docutils literal notranslate"><span class="pre">reply</span></code>
+or both of these properties, each holding a <a class="reference internal" href="#attr-list"><span class="std std-ref">Message attribute list</span></a>.</p>
+</section>
+<section id="dump">
+<h4>dump<a class="headerlink" href="#dump" title="Permalink to this heading">¶</a></h4>
+中文：转储请求的规范。应包含请求，回复
+或同时具有这两个属性，每个属性包含一个消息属性列表。
+<p>Specification for the <code class="docutils literal notranslate"><span class="pre">dumpit</span></code> request. Should contain <code class="docutils literal notranslate"><span class="pre">request</span></code>, <code class="docutils literal notranslate"><span class="pre">reply</span></code>
+or both of these properties, each holding a <a class="reference internal" href="#attr-list"><span class="std std-ref">Message attribute list</span></a>.</p>
+</section>
+<section id="notify">
+<h4>notify<a class="headerlink" href="#notify" title="Permalink to this heading">¶</a></h4>
+中文：标示该消息为通知。包含与通知共享的操作名称（可能与持有此属性的操作相同）的内容。
+<p>Designates the message as a notification. Contains the name of the operation
+(possibly the same as the operation holding this property) which shares
+the contents with the notification (<code class="docutils literal notranslate"><span class="pre">do</span></code>).</p>
+</section>
+<section id="event">
+<h4>event<a class="headerlink" href="#event" title="Permalink to this heading">¶</a></h4>
+中文：事件属性规范中包含一个消息属性列表。
+事件属性与通知属性是互斥的。
+<p>Specification of attributes in the event, holds a <a class="reference internal" href="#attr-list"><span class="std std-ref">Message attribute list</span></a>.
+<code class="docutils literal notranslate"><span class="pre">event</span></code> property is mutually exclusive with <code class="docutils literal notranslate"><span class="pre">notify</span></code>.</p>
+</section>
+<section id="mcgrp">
+<h4>mcgrp<a class="headerlink" href="#mcgrp" title="Permalink to this heading">¶</a></h4>
+中文：与event和notify一起使用，指定消息属于哪个多播组。
+<p>Used with <code class="docutils literal notranslate"><span class="pre">event</span></code> and <code class="docutils literal notranslate"><span class="pre">notify</span></code>, specifies which multicast group
+message belongs to.</p>
+</section>
+</section>
+<section id="message-attribute-list">
+<span id="attr-list"></span><h3>Message attribute list<a class="headerlink" href="#message-attribute-list" title="Permalink to this heading">¶</a></h3>
+中文：请求、回复和事件属性具有单个属性，其中包含属性名称的列表。
+<p><code class="docutils literal notranslate"><span class="pre">request</span></code>, <code class="docutils literal notranslate"><span class="pre">reply</span></code> and <code class="docutils literal notranslate"><span class="pre">event</span></code> properties have a single <code class="docutils literal notranslate"><span class="pre">attributes</span></code>
+property which holds the list of attribute names.</p>
+中文：消息还可以定义预先和后续属性，这些属性将作为内核中的pre_doit和post_doit调用进行渲染（这些属性应该被用户空间忽略）。
+<p>Messages can also define <code class="docutils literal notranslate"><span class="pre">pre</span></code> and <code class="docutils literal notranslate"><span class="pre">post</span></code> properties which will be rendered
+as <code class="docutils literal notranslate"><span class="pre">pre_doit</span></code> and <code class="docutils literal notranslate"><span class="pre">post_doit</span></code> calls in the kernel (these properties should
+be ignored by user space).</p>
+</section>
+<section id="mcast-groups">
+<h3>mcast-groups<a class="headerlink" href="#mcast-groups" title="Permalink to this heading">¶</a></h3>
+中文：本部分列出了该家族的组播组。
+<p>This section lists the multicast groups of the family.</p>
+<section id="id8">
+<h4>list<a class="headerlink" href="#id8" title="Permalink to this heading">¶</a></h4>
+中文：mcast-groups的唯一属性用于genetlink，保存了组的列表。
+<p>The only property of <code class="docutils literal notranslate"><span class="pre">mcast-groups</span></code> for <code class="docutils literal notranslate"><span class="pre">genetlink</span></code>, holds the list
+of groups.</p>
+</section>
+</section>
+<section id="multicast-group-properties">
+<h3>Multicast group properties<a class="headerlink" href="#multicast-group-properties" title="Permalink to this heading">¶</a></h3>
+<section id="id9">
+<h4>name<a class="headerlink" href="#id9" title="Permalink to this heading">¶</a></h4>
+中文：在该家族中唯一标识多播组。与家族 ID 类似，多播组 ID 需要在运行时根据名称解析。
+<p>Uniquely identifies the multicast group in the family. Similarly to
+Family ID, Multicast Group ID needs to be resolved at runtime, based
+on the name.</p>
+</section>
+</section>
+</section>
+<section id="attribute-types">
+<span id="attr-types"></span><h2>Attribute types<a class="headerlink" href="#attribute-types" title="Permalink to this heading">¶</a></h2>
+中文：本节描述了genetlink兼容性级别支持的属性类型。请参考不同级别的文档以获取额外的属性类型信息。
+<p>This section describes the attribute types supported by the <code class="docutils literal notranslate"><span class="pre">genetlink</span></code>
+compatibility level. Refer to documentation of different levels for additional
+attribute types.</p>
+<section id="scalar-integer-types">
+<h3>Scalar integer types<a class="headerlink" href="#scalar-integer-types" title="Permalink to this heading">¶</a></h3>
+中文：固定宽度整数类型：
+u8，u16，u32，u64，s8，s16，s32，s64。
+<p>Fixed-width integer types:
+<code class="docutils literal notranslate"><span class="pre">u8</span></code>, <code class="docutils literal notranslate"><span class="pre">u16</span></code>, <code class="docutils literal notranslate"><span class="pre">u32</span></code>, <code class="docutils literal notranslate"><span class="pre">u64</span></code>, <code class="docutils literal notranslate"><span class="pre">s8</span></code>, <code class="docutils literal notranslate"><span class="pre">s16</span></code>, <code class="docutils literal notranslate"><span class="pre">s32</span></code>, <code class="docutils literal notranslate"><span class="pre">s64</span></code>.</p>
+中文：请注意，应避免使用小于32位的类型，因为在Netlink消息中使用它们无法节省任何内存（由于对齐）。有关64位属性的填充，请参阅pad。
+<p>Note that types smaller than 32 bit should be avoided as using them
+does not save any memory in Netlink messages (due to alignment).
+See <a class="reference internal" href="#pad-type"><span class="std std-ref">pad</span></a> for padding of 64 bit attributes.</p>
+中文：属性的有效载荷是主机字节顺序的整数，除非字节顺序另有规定。
+<p>The payload of the attribute is the integer in host order unless <code class="docutils literal notranslate"><span class="pre">byte-order</span></code>
+specifies otherwise.</p>
+</section>
+<section id="pad">
+<span id="pad-type"></span><h3>pad<a class="headerlink" href="#pad" title="Permalink to this heading">¶</a></h3>
+中文：用于填充需要比Netlink（例如，64位整数）所需的标准4字节对齐要求更大对齐的填充属性的特殊属性类型。
+在任何属性集中，只能有一个填充类型的属性，并且应在需要填充时自动使用。
+<p>Special attribute type used for padding attributes which require alignment
+bigger than standard 4B alignment required by netlink (e.g. 64 bit integers).
+There can only be a single attribute of the <code class="docutils literal notranslate"><span class="pre">pad</span></code> type in any attribute set
+and it should be automatically used for padding when needed.</p>
+</section>
+<section id="flag">
+<h3>flag<a class="headerlink" href="#flag" title="Permalink to this heading">¶</a></h3>
+中文：没有有效负载的属性，其出现即是全部的信息。
+<p>Attribute with no payload, its presence is the entire information.</p>
+</section>
+<section id="binary">
+<h3>binary<a class="headerlink" href="#binary" title="Permalink to this heading">¶</a></h3>
+中文：原始二进制数据属性，其内容对于通用代码来说是不透明的。
+<p>Raw binary data attribute, the contents are opaque to generic code.</p>
+</section>
+<section id="string">
+<h3>string<a class="headerlink" href="#string" title="Permalink to this heading">¶</a></h3>
+中文：字符串。除非checks将unterminated-ok设置为true，
+否则要求该字符串必须以空字符结尾。
+在checks中的max-len表示可能的最长字符串长度，
+若不存在，则字符串长度不受限制。
+<p>Character string. Unless <code class="docutils literal notranslate"><span class="pre">checks</span></code> has <code class="docutils literal notranslate"><span class="pre">unterminated-ok</span></code> set to <code class="docutils literal notranslate"><span class="pre">true</span></code>
+the string is required to be null terminated.
+<code class="docutils literal notranslate"><span class="pre">max-len</span></code> in <code class="docutils literal notranslate"><span class="pre">checks</span></code> indicates the longest possible string,
+if not present the length of the string is unbounded.</p>
+中文：请注意，max-len不计入终止字符。
+<p>Note that <code class="docutils literal notranslate"><span class="pre">max-len</span></code> does not count the terminating character.</p>
+</section>
+<section id="nest">
+<h3>nest<a class="headerlink" href="#nest" title="Permalink to this heading">¶</a></h3>
+中文：包含其他（嵌套）属性的特性。
+nested-attributes 指定在内部使用的属性集。
+<p>Attribute containing other (nested) attributes.
+<code class="docutils literal notranslate"><span class="pre">nested-attributes</span></code> specifies which attribute set is used inside.</p>
+</section>
+</section>
+</section>
+</div>
+</div>
+</div>
+<div class="clearer"></div>
+</div>
+<div class="footer">
+      ©The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/userspace-api/netlink/specs.rst.txt" rel="nofollow">Page source</a>
+</div>
+</body>
+</html>
