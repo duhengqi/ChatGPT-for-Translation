@@ -24,9 +24,9 @@ ALLOWED_FILE_TYPES = [
 ]
 
 @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
-def translate(target_language, text, use_azure=False, api_base="", deployment_name="", options=None):
+def translate(key, target_language, text, use_azure=False, api_base="", deployment_name="", options=None):
     client = OpenAI(
-      api_key="sk-R5VhE7pR88Dm0xZmMAl17NtvKJgRbuB2NDbXp8hKR2hxUeOv",
+      api_key=key,
       base_url="https://api.openai-proxy.org/v1"
     )
     # Set up the prompt
@@ -51,13 +51,14 @@ def translate_text_file(paragraphs, options):
 
     # Create a list to hold your translated_paragraphs. We'll populate it as futures complete.
     translated_paragraphs = [None for _ in paragraphs]
-
+    OPENAI_API_KEY = options.openai_key
     # Submit your translation tasks
     futures = []
     with ThreadPoolExecutor(max_workers=options.num_threads) as executor:
         for idx, text in enumerate(paragraphs):
             future = executor.submit(
                 translate,
+                OPENAI_API_KEY,
                 options.target_language,
                 text,
                 options.use_azure,
@@ -106,7 +107,9 @@ def parse_arguments():
         parser.add_argument(argument, **kwargs)
 
     options = parser.parse_args()
-
+    OPENAI_API_KEY = options.openai_key
+    if not OPENAI_API_KEY:
+        raise Exception("Please provide your OpenAI API key")
     return options
 
 def check_file_path(file_path: Path):
