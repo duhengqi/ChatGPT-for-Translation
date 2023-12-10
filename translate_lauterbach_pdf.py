@@ -1,4 +1,3 @@
-from bs4 import BeautifulSoup, NavigableString
 import argparse
 import os
 import re
@@ -11,7 +10,7 @@ from tqdm import tqdm
 from openai import OpenAI
 import requests
 import trafilatura
-from tqdm import tqdm
+import pdfplumber
 from utils.bilingual_txt_to_docx import create_bilingual_docx
 from tenacity import (
     retry,
@@ -19,11 +18,14 @@ from tenacity import (
     wait_random_exponential,
 )  # for exponential backoff
 from concurrent.futures import as_completed
+ALLOWED_FILE_TYPES = [
+    ".pdf",
+]
 
 @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
-def translate(target_language, text, use_azure=False, api_base="", deployment_name="", options=None):
+def translate(key, target_language, text, use_azure=False, api_base="", deployment_name="", options=None):
     client = OpenAI(
-      api_key="sk-R5VhE7pR88Dm0xZmMAl17NtvKJgRbuB2NDbXp8hKR2hxUeOv",
+      api_key=key,
       base_url="https://api.openai-proxy.org/v1"
     )
     # Set up the prompt
@@ -45,7 +47,7 @@ def translate(target_language, text, use_azure=False, api_base="", deployment_na
     return t_text
 
 def translate_text_file(paragraphs, options):
-
+    OPENAI_API_KEY = options.openai_key
     # Create a list to hold your translated_paragraphs. We'll populate it as futures complete.
     translated_paragraphs = [None for _ in paragraphs]
 
@@ -55,6 +57,7 @@ def translate_text_file(paragraphs, options):
         for idx, text in enumerate(paragraphs):
             future = executor.submit(
                 translate,
+                OPENAI_API_KEY,
                 options.target_language,
                 text,
                 options.use_azure,
@@ -74,7 +77,6 @@ def translate_text_file(paragraphs, options):
                         translated_paragraphs[idx] = ""  # or however you want to handle errors
 
     return translated_paragraphs
-
 
 def parse_arguments():
     """Parse command-line arguments"""
@@ -99,53 +101,66 @@ def parse_arguments():
         ("--azure_deployment_name",
          {"type": str, "default": "", "help": "Deployment of Azure OpenAI service. Only require when use AOAI."}),
     ]
-
     for argument, kwargs in arguments:
         parser.add_argument(argument, **kwargs)
-
     options = parser.parse_args()
+
+    OPENAI_API_KEY = options.openai_key
+    if not OPENAI_API_KEY:
+        raise Exception("Please provide your OpenAI API key")
 
     return options
 
-def modify_html():
-    test_file="/code/ChatGPT-for-Translation/v6.3/userspace-api/netlink/intro.html"
-    trans_file="/code/ChatGPT-for-Translation/v6.3/userspace-api/netlink/intro.html"
+def check_file_path(file_path: Path):
+    """
+    Ensure file extension is in ALLOWED_FILE_TYPES or is a URL.
+    If file ends with _translated.txt or _bilingual.txt, skip it.
+    If there is any txt file ending with _translated.txt or _bilingual.txt, skip it.
+    """
+    if not file_path.suffix.lower() in ALLOWED_FILE_TYPES :
+        print(f"File extension {file_path.suffix} is not allowed.")
+        raise Exception("Please use a pdf file")
 
-    options = parse_arguments()
-    with open(test_file, "r", encoding='utf-8') as f:
-        html_string = f.read()
-    # 使用BeautifulSoup解析HTML
-    soup = BeautifulSoup(html_string, 'html.parser')
+    if file_path.stem.endswith("_translated"):
+        print(
+            f"You already have a translated file for {file_path}, skipping...")
+        return False
 
-    # 找到所有指定标签
-    target_tags = soup.find_all('p')
-    origin_text_list = []
-    # 替换标签内容为指定文本
-    for index, tag in enumerate(target_tags):
-        if index == 1:
-            continue
-        if tag.text is not None and tag.text.count(' ') > 6:
-            origin_text_list.append(tag.text)
-            # empty_line = NavigableString("中文："+tag.text+"\n")
-            # tag.insert_before(empty_line)
+    if file_path.with_name(f"{file_path.stem}_translated.txt").exists():
+        print(
+            f"You already have a translated file for {file_path}, skipping...")
+        return False
+
+    return True
+
+def translate_pdf_file(input_path, options):
+    print(f"start translate {input_path}")
+    if not check_file_path(input_path):
+        return
+    start_index = 0
+    end_index = 1
+    origin_text_list=[]
+    with pdfplumber.open("lauterbach_demo.pdf") as pdf:
+        # range(start_index, end_index, step)
+        for i in range(start_index, end_index, 1):
+            origin_text_list.append(pdf.pages[i].extract_text())
+
     translated_text_list = translate_text_file(origin_text_list, options)
     # translated_text_list = origin_text_list
-    i = 0
-    for index, tag in enumerate(target_tags):
-        if index == 1:
-            continue
-        if tag.text is not None and tag.text.count(' ') > 6:
-            text_line = NavigableString("中文："+translated_text_list[i]+"\n")
-            tag.insert_before(text_line)
-            i += 1
-    # 获取修改后的HTML
-    modified_html = str(soup)
-    with open(trans_file, "w", encoding='utf-8') as f:
-        f.write(modified_html)
+    trans_file_path = input_path.with_name(f"{input_path.stem}_translated.txt")
+    print(f"translate done, writing result in {trans_file_path}")
+    with open(trans_file_path, "w", encoding='utf-8') as f:
+        for text in translated_text_list:
+            f.write(text)
 
+def main():
+    """Main function"""
+    options = parse_arguments()
+    input_path = Path(options.input_path)
+    if not input_path.is_file():
+        print("please input absolute path")
+        return
+    translate_pdf_file(input_path, options)
 
 if __name__ == "__main__":
-    modify_html()
-
-
-# print(modified_html)
+    main()

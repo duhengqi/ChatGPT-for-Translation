@@ -304,7 +304,7 @@ def main():
     #     process_file(input_path, options)
     with pdfplumber.open("lauterbach_demo.pdf") as pdf:
         page = pdf.pages[0]
-        print(page.extrace_text())
+        print(page.extract_text())
 
 if __name__ == "__main__":
     main()
